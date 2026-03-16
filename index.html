@@ -1,0 +1,2948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Your Portal — Northwest Lagotto</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --cream:#f7f3ee; --warm-white:#fdfaf6; --parchment:#ede8e0;
+  --green-deep:#2c4a3e; --green-mid:#3d6b5c; --green-light:#5a8f7c; --green-pale:#e8f0ed;
+  --gold:#b89660; --gold-light:#d4b483; --gold-bright:#e8c97a; --gold-dim:rgba(184,150,96,.18);
+  --text-dark:#1e2d28; --text-mid:#4a5e57; --text-light:#7a8f88;
+  --border:#d4cdc4;
+  --t:.65s cubic-bezier(.4,0,.2,1); --tf:.32s cubic-bezier(.4,0,.2,1);
+}
+
+html,body{height:100%;background:#ede8df;font-family:'DM Sans',sans-serif;color:var(--text-dark);overflow-x:hidden}
+
+body{
+  background-image:
+    radial-gradient(ellipse at 10% 10%,rgba(90,143,124,.18) 0%,transparent 50%),
+    radial-gradient(ellipse at 90% 85%,rgba(184,150,96,.22) 0%,transparent 50%),
+    radial-gradient(ellipse at 50% 50%,rgba(184,150,96,.06) 0%,transparent 65%);
+  min-height:100vh;
+}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:2;
+  background:radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(30,20,10,.07) 100%);}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.4;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");}
+
+/* ═══ CORNER ORNAMENTS ═══ */
+.corner{position:fixed;width:28px;height:28px;z-index:50;pointer-events:none}
+.corner::before,.corner::after{content:'';position:absolute;background:var(--gold);opacity:.4}
+.corner::before{width:100%;height:1px;top:0;left:0}
+.corner::after{width:1px;height:100%;top:0;left:0}
+.c-tl{top:16px;left:16px} .c-tr{top:16px;right:16px;transform:scaleX(-1)}
+.c-bl{bottom:16px;left:16px;transform:scaleY(-1)} .c-br{bottom:16px;right:16px;transform:scale(-1)}
+
+/* ═══ PARTICLE CANVAS ═══ */
+#pc{position:fixed;inset:0;pointer-events:none;z-index:1}
+
+/* ═══ SEAL INTRO ═══ */
+.seal-wrap{
+  position:fixed;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;z-index:200;
+  background:rgba(237,232,223,.97);
+  transition:opacity 1.1s cubic-bezier(.4,0,.2,1);cursor:pointer;
+}
+.seal-wrap.out{opacity:0;pointer-events:none}
+
+.s-above{
+  font-size:10px;font-weight:500;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--text-light);margin-bottom:36px;
+  opacity:0;animation:fup .9s ease forwards .35s;
+}
+.s-ring{
+  width:148px;height:148px;position:relative;
+  opacity:0;animation:pop 1s cubic-bezier(.34,1.56,.64,1) forwards .7s;
+}
+.s-ring svg{
+  width:100%;height:100%;
+  filter:drop-shadow(0 0 18px rgba(184,150,96,.4));
+  animation:glow 2.8s ease-in-out infinite 1.7s;
+}
+.s-ring svg circle.spin-ring{
+  animation:spin 18s linear infinite;transform-origin:74px 74px;
+}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes glow{
+  0%,100%{filter:drop-shadow(0 0 14px rgba(184,150,96,.38))}
+  50%{filter:drop-shadow(0 0 42px rgba(184,150,96,.82)) drop-shadow(0 0 65px rgba(184,150,96,.22))}
+}
+@keyframes pop{from{opacity:0;transform:scale(.62)}to{opacity:1;transform:scale(1)}}
+
+.s-tagline{
+  font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;
+  font-style:italic;color:var(--text-mid);margin-top:28px;letter-spacing:.04em;
+  opacity:0;animation:fup .9s ease forwards 1.25s;
+}
+.s-hint{
+  font-size:11px;font-weight:300;color:var(--text-light);margin-top:42px;
+  letter-spacing:.14em;text-transform:uppercase;
+  opacity:0;animation:fup .9s ease forwards 2.1s;
+  display:flex;align-items:center;gap:8px;
+}
+.s-hint-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--gold);opacity:.7;
+  animation:blink 1.2s ease-in-out infinite 2.8s;
+}
+@keyframes blink{0%,100%{opacity:.7}50%{opacity:.15}}
+@keyframes fup{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ FIXED HEADER ═══ */
+.f-header{
+  position:fixed;top:0;left:0;right:0;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 64px;z-index:60;
+  opacity:0;transition:opacity .8s ease;pointer-events:none;
+}
+.f-header.vis{opacity:1;pointer-events:auto}
+.f-wm{font-size:10px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--text-light)}
+.f-right{display:flex;align-items:center;gap:20px}
+.f-buyer{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:300;color:var(--gold);letter-spacing:.08em;}
+.f-ct{font-size:10px;font-weight:400;letter-spacing:.2em;text-transform:uppercase;color:var(--text-light)}
+
+/* ═══ NAV RAIL — RIGHT SIDE ═══ */
+.nav-rail{
+  position:fixed;right:34px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;align-items:center;
+  z-index:55;opacity:0;transition:opacity .8s ease;
+}
+.nav-rail.vis{opacity:1}
+.rail-track{width:1px;background:rgba(184,150,96,.13);position:relative;border-radius:1px}
+.rail-fill{
+  position:absolute;top:0;left:0;width:100%;height:0%;
+  background:linear-gradient(to bottom,var(--gold-bright),var(--gold));
+  border-radius:1px;box-shadow:0 0 10px rgba(184,150,96,.5);
+  transition:height var(--t);
+}
+.rail-dots{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:0;
+}
+.r-dot{
+  width:7px;height:7px;border-radius:50%;
+  border:1.5px solid rgba(184,150,96,.28);background:var(--cream);
+  transform:translateX(-3px);transition:all .4s ease;cursor:pointer;
+  position:relative;
+}
+.r-dot.active{
+  background:var(--gold);border-color:var(--gold);
+  box-shadow:0 0 10px rgba(184,150,96,.7),0 0 22px rgba(184,150,96,.28);
+  transform:translateX(-3px) scale(1.25);
+}
+.r-dot.done{background:var(--gold-light);border-color:var(--gold-light)}
+.r-dot.locked{background:var(--cream);border-color:rgba(184,150,96,.12);opacity:.35;cursor:default}
+.r-dot.post-locked{border-style:dashed;opacity:.3}
+.r-dot-label{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  white-space:nowrap;font-size:10px;font-weight:300;color:var(--text-light);
+  letter-spacing:.06em;opacity:0;transition:opacity .2s ease;pointer-events:none;
+  background:rgba(237,232,223,.92);padding:2px 7px;border-radius:3px;
+}
+.r-dot:hover .r-dot-label{opacity:1}
+
+/* ═══ PORTAL MAIN ═══ */
+.portal-main{
+  position:relative;z-index:10;
+  padding:100px 108px 80px 48px;
+  max-width:900px;margin:0 auto;
+  opacity:0;transition:opacity 1s ease .2s;
+}
+.portal-main.revealed{opacity:1}
+
+/* ═══ GREETING ═══ */
+.greeting-section{
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;padding-bottom:60px;
+}
+.greeting-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(44px,6vw,72px);font-weight:300;
+  color:var(--green-deep);line-height:1.1;letter-spacing:-.02em;
+  opacity:0;transform:translateY(18px);transition:opacity .9s ease,transform .9s ease;
+}
+.greeting-name.on{opacity:1;transform:translateY(0)}
+.greeting-sub{
+  font-size:15px;font-weight:300;color:var(--gold);
+  letter-spacing:.12em;text-transform:uppercase;margin-top:18px;
+  opacity:0;transform:translateY(12px);
+  transition:opacity .8s ease .45s,transform .8s ease .45s;
+}
+.greeting-sub.on{opacity:1;transform:translateY(0)}
+.greeting-sub strong{font-weight:500}
+.scroll-hint{
+  margin-top:56px;display:inline-flex;flex-direction:column;align-items:center;gap:0;
+  opacity:0;transition:opacity 1s ease;cursor:pointer;
+}
+.scroll-hint.on{opacity:1}
+.scroll-hint-label{
+  font-size:9px;font-weight:400;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--text-light);margin-bottom:14px;
+  transition:color .3s ease;
+}
+.scroll-hint:hover .scroll-hint-label{color:var(--gold)}
+
+/* The glowing pill */
+.scroll-pill{
+  display:flex;flex-direction:column;align-items:center;
+  width:36px;padding:10px 0 12px;
+  border:1px solid rgba(184,150,96,.28);border-radius:20px;
+  position:relative;overflow:hidden;
+  transition:border-color .4s ease,box-shadow .4s ease;
+}
+.scroll-hint:hover .scroll-pill{
+  border-color:rgba(184,150,96,.65);
+  box-shadow:0 0 18px rgba(184,150,96,.2),0 0 32px rgba(184,150,96,.08);
+}
+/* Travelling light inside the pill */
+.scroll-pill::before{
+  content:'';position:absolute;top:-100%;left:0;right:0;height:50%;
+  background:linear-gradient(to bottom,transparent,rgba(184,150,96,.22),transparent);
+  animation:pillTravel 2.2s cubic-bezier(.4,0,.6,1) infinite 2s;
+}
+@keyframes pillTravel{
+  0%{top:-100%}
+  100%{top:200%}
+}
+.scroll-dot{
+  width:5px;height:5px;border-radius:50%;background:var(--gold);
+  animation:dotFall 2.2s cubic-bezier(.4,0,.6,1) infinite 2s;
+  opacity:0;
+}
+@keyframes dotFall{
+  0%{transform:translateY(0);opacity:0}
+  15%{opacity:1}
+  80%{opacity:.6}
+  100%{transform:translateY(18px);opacity:0}
+}
+
+/* Peek animation — page drifts down slightly to reveal card crown */
+@keyframes gentlePeek{
+  0%{transform:translateY(0)}
+  40%{transform:translateY(-38px)}
+  58%{transform:translateY(-34px)}
+  100%{transform:translateY(-38px)}
+}
+.portal-main.peeking{animation:gentlePeek 3.2s cubic-bezier(.4,0,.2,1) forwards}
+
+/* ═══ LITTER CARD ═══ */
+.litter-card{
+  background:var(--warm-white);border-radius:12px;
+  border:1px solid var(--border);
+  overflow:hidden;margin-bottom:80px;
+  box-shadow:0 8px 48px rgba(44,74,62,.1),0 2px 8px rgba(44,74,62,.05),0 0 0 1px rgba(184,150,96,.07);
+  position:relative;
+}
+.litter-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--gold) 0%,var(--gold-light) 40%,#e8d4a8 50%,var(--gold-light) 60%,var(--gold) 100%);
+  background-size:200% 100%;animation:shimmer 4s ease-in-out infinite;z-index:2;
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* Photo carousel */
+.carousel-wrap{position:relative;height:340px;overflow:hidden;background:#2a2a28}
+.carousel-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  opacity:0;transition:opacity 1s ease;
+}
+.carousel-img.active{opacity:1}
+.carousel-nav{
+  position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  display:flex;gap:8px;z-index:5;
+}
+.c-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.3);
+  cursor:pointer;transition:all .3s ease;
+}
+.c-dot.active{background:#fff;transform:scale(1.25)}
+.carousel-btn{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:38px;height:38px;background:rgba(253,250,246,.18);
+  border:1px solid rgba(255,255,255,.2);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:16px;cursor:pointer;z-index:5;
+  transition:background .25s ease;backdrop-filter:blur(4px);
+}
+.carousel-btn:hover{background:rgba(184,150,96,.4)}
+.carousel-prev{left:14px} .carousel-next{right:14px}
+.carousel-caption{
+  position:absolute;bottom:38px;left:0;right:0;text-align:center;
+  font-size:9px;font-weight:400;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(255,255,255,.55);z-index:5;
+}
+
+/* Card body */
+.card-body{padding:32px 40px 36px}
+.card-eyebrow{
+  font-size:9px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--text-light);margin-bottom:22px;display:flex;align-items:center;gap:12px;
+}
+.card-eyebrow::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--border),transparent)}
+
+/* Countdown */
+.countdown-grid{display:flex;align-items:flex-start;gap:0;margin-bottom:28px}
+.cd-unit{flex:1;text-align:center}
+.cd-num{
+  font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;
+  color:var(--green-deep);line-height:1;display:block;
+}
+.cd-num.pulse{animation:cdPulse 1s ease}
+@keyframes cdPulse{0%,100%{color:var(--green-deep)}50%{color:var(--gold)}}
+.cd-label{
+  font-size:8px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-top:5px;display:block;
+}
+.cd-sep{
+  font-family:'Cormorant Garamond',serif;font-size:32px;
+  color:var(--gold);opacity:.25;padding-top:6px;line-height:1;
+}
+.cd-sub{
+  font-size:12px;font-weight:300;color:var(--text-light);
+  letter-spacing:.1em;text-align:center;margin-bottom:26px;margin-top:-8px;
+}
+
+/* Divider */
+.card-divider{height:1px;background:linear-gradient(to right,transparent,var(--border),transparent);margin:26px 0}
+
+/* Note */
+.card-note{
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:300;
+  color:var(--text-mid);line-height:1.82;font-style:italic;
+  border-left:2px solid rgba(184,150,96,.4);padding-left:18px;
+}
+.card-sig{
+  margin-top:14px;font-family:'Cormorant Garamond',serif;
+  font-size:16px;font-style:italic;color:var(--text-light);
+}
+
+/* Progress saved note */
+.progress-banner{
+  display:flex;align-items:center;gap:10px;
+  background:var(--green-pale);border:1px solid rgba(61,107,92,.18);border-radius:8px;
+  padding:11px 18px;margin-bottom:56px;
+  font-size:12px;font-weight:300;color:var(--green-mid);letter-spacing:.03em;
+  opacity:0;transition:opacity .6s ease .3s;
+}
+.progress-banner.on{opacity:1}
+.pb-dot{width:6px;height:6px;border-radius:50%;background:var(--green-light);flex-shrink:0}
+
+/* ═══ SECTION DIVIDER ═══ */
+.section-group-label{
+  font-size:9px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;
+  color:rgba(184,150,96,.55);margin:72px 0 32px;
+  display:flex;align-items:center;gap:14px;
+}
+.section-group-label::before,.section-group-label::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(to right,transparent,rgba(184,150,96,.2),transparent);
+}
+
+/* ═══ MODULE SECTIONS ═══ */
+.module{
+  position:relative;margin-bottom:56px;
+  opacity:0;transform:translateY(28px);
+  transition:opacity .7s ease,transform .7s ease;
+}
+.module.revealed{opacity:1;transform:translateY(0)}
+
+.ghost-num{
+  position:absolute;right:-16px;top:-52px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:190px;font-weight:300;font-style:italic;
+  color:var(--gold);opacity:.038;
+  line-height:1;pointer-events:none;letter-spacing:-.02em;
+  user-select:none;z-index:0;
+}
+
+.module-inner{
+  background:var(--warm-white);border-radius:12px;
+  border:1px solid var(--border);overflow:hidden;
+  box-shadow:0 4px 28px rgba(44,74,62,.07),0 1px 4px rgba(44,74,62,.04);
+  position:relative;z-index:1;
+}
+.module-header{
+  padding:26px 36px 24px;border-bottom:1px solid transparent;
+  transition:border-color .3s ease;cursor:pointer;
+  display:flex;align-items:center;gap:16px;
+}
+.module.open .module-header{
+  border-bottom-color:rgba(61,107,92,.12);
+  background:var(--green-pale);
+}
+.module-num{
+  font-family:'Cormorant Garamond',serif;font-size:13px;
+  font-weight:400;color:var(--gold);letter-spacing:.22em;
+  flex-shrink:0;width:28px;
+}
+.module-meta{flex:1}
+.module-cat{
+  font-size:9px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--text-light);margin-bottom:5px;
+}
+.module-title{
+  font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;
+  color:var(--green-deep);line-height:1.2;
+}
+.module-chevron{
+  font-size:11px;color:var(--gold);opacity:.6;
+  transition:transform .4s ease,opacity .3s ease;flex-shrink:0;
+}
+.module.open .module-chevron{transform:rotate(180deg);opacity:1}
+
+/* Left accent bar on open */
+.module-inner::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(to bottom,var(--gold),var(--green-mid));
+  opacity:0;transition:opacity .4s ease;z-index:2;
+}
+.module.open .module-inner::before{opacity:1}
+
+/* Module body */
+.module-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .75s cubic-bezier(.4,0,.2,1);
+}
+.module.open .module-body{max-height:6000px}
+.module-content{padding:32px 36px 40px;position:relative;z-index:1}
+
+/* Lock overlay */
+.lock-overlay{
+  padding:32px 36px 36px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+}
+.lock-icon{
+  font-size:22px;color:var(--gold);opacity:.35;margin-bottom:14px;
+}
+.lock-title{
+  font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;
+  color:var(--text-mid);margin-bottom:8px;
+}
+.lock-msg{
+  font-size:13px;font-weight:300;color:var(--text-light);
+  line-height:1.7;max-width:380px;
+}
+
+/* Pairing module special */
+.module.pairing .module-inner{
+  border-color:rgba(184,150,96,.35);
+  background:linear-gradient(135deg,rgba(184,150,96,.04),rgba(253,250,246,1));
+}
+.module.pairing .module-title{color:var(--gold)}
+
+/* Post-pickup group */
+.module.post-pickup .module-inner{
+  border-style:dashed;border-color:rgba(184,150,96,.22);
+  background:transparent;
+}
+.module.post-pickup .module-title{color:var(--text-light)}
+
+/* ═══ MODULE CONTENT STYLES ═══ */
+.mc-lead{
+  font-family:'DM Sans',sans-serif;font-size:15px;font-weight:300;
+  color:var(--text-mid);line-height:1.85;margin-bottom:28px;
+}
+.mc-h2{
+  font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;
+  color:var(--green-deep);margin:32px 0 10px;letter-spacing:.01em;
+}
+.mc-h3{
+  font-size:13px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--green-mid);margin:22px 0 8px;
+}
+.mc-p{
+  font-size:14px;font-weight:300;color:var(--text-mid);
+  line-height:1.82;margin-bottom:16px;
+}
+.mc-rule{height:1px;background:linear-gradient(to right,transparent,var(--border),transparent);margin:28px 0}
+
+/* Checklist */
+.checklist{display:flex;flex-direction:column;gap:10px;margin:16px 0 24px}
+.ci{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:12px 16px;border:1px solid var(--border);border-radius:8px;
+  cursor:pointer;transition:all .25s ease;background:var(--cream);
+}
+.ci:hover{border-color:var(--green-light);background:var(--green-pale)}
+.ci.checked{
+  background:linear-gradient(to right,rgba(61,107,92,.06),transparent);
+  border-color:rgba(61,107,92,.3);
+}
+.ci-box{
+  width:20px;height:20px;border:1.5px solid var(--border);border-radius:4px;
+  flex-shrink:0;margin-top:1px;position:relative;transition:all .25s ease;
+}
+.ci.checked .ci-box{background:var(--green-deep);border-color:var(--green-deep)}
+.ci.checked .ci-box::after{
+  content:'';position:absolute;top:50%;left:50%;
+  width:10px;height:6px;
+  border-left:2px solid #fff;border-bottom:2px solid #fff;
+  transform:translate(-50%,-65%) rotate(-45deg);
+}
+.ci-text{font-size:13px;font-weight:300;color:var(--text-mid);line-height:1.55}
+.ci.checked .ci-text{color:var(--text-light);text-decoration:line-through;text-decoration-color:rgba(61,107,92,.3)}
+.checklist-progress{
+  font-size:11px;font-weight:400;color:var(--gold);letter-spacing:.08em;
+  margin-top:12px;display:flex;align-items:center;gap:10px;
+}
+.cp-bar{flex:1;height:2px;background:var(--border);border-radius:1px;overflow:hidden}
+.cp-fill{height:100%;background:linear-gradient(to right,var(--gold-bright),var(--gold));border-radius:1px;transition:width .4s ease}
+
+/* ═══ INVALID ACCESS ═══ */
+.invalid-wrap{
+  position:fixed;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;z-index:300;
+  padding:40px;text-align:center;
+}
+.invalid-ornament{
+  font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);margin-bottom:20px;
+}
+.invalid-title{
+  font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;
+  color:var(--green-deep);margin-bottom:14px;
+}
+.invalid-msg{font-size:14px;font-weight:300;color:var(--text-mid);line-height:1.75;max-width:380px}
+.invalid-link{color:var(--gold);text-decoration:none}
+
+/* ═══ QUESTIONNAIRE ═══ */
+.q-intro{
+  font-size:13px;font-weight:300;color:var(--text-light);letter-spacing:.06em;
+  font-style:italic;margin-bottom:28px;
+  padding:14px 18px;background:var(--green-pale);border-radius:6px;
+  border-left:2px solid rgba(61,107,92,.3);line-height:1.7;
+}
+.q-section{margin-bottom:36px}
+.q-section-title{
+  font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;
+  color:var(--green-deep);margin-bottom:6px;letter-spacing:.01em;
+}
+.q-section-hint{
+  font-size:12px;font-weight:300;color:var(--text-light);
+  margin-bottom:16px;line-height:1.6;
+}
+.q-field{margin-bottom:18px}
+.q-label{
+  font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-mid);display:block;margin-bottom:9px;
+}
+.q-options{display:flex;flex-wrap:wrap;gap:8px}
+.q-opt{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:8px 14px;border:1px solid var(--border);border-radius:20px;
+  cursor:pointer;font-size:13px;font-weight:300;color:var(--text-mid);
+  background:var(--cream);transition:all .22s ease;user-select:none;
+}
+.q-opt:hover{border-color:var(--green-light);background:var(--green-pale);color:var(--green-deep)}
+.q-opt.selected{
+  border-color:var(--gold);background:rgba(184,150,96,.1);
+  color:var(--green-deep);font-weight:400;
+}
+.q-opt.selected::before{content:'✓ ';color:var(--gold);font-size:11px}
+.q-opt.multi.selected{border-color:var(--green-mid);background:var(--green-pale);color:var(--green-deep)}
+.q-opt.multi.selected::before{content:'✓ ';color:var(--green-mid);font-size:11px}
+.q-scale{display:flex;align-items:center;gap:0;width:100%}
+.q-scale-opt{
+  flex:1;text-align:center;padding:10px 4px;
+  border:1px solid var(--border);border-right:none;
+  cursor:pointer;font-size:12px;font-weight:300;color:var(--text-light);
+  background:var(--cream);transition:all .2s ease;
+  min-width:0;
+}
+.q-scale-opt:first-child{border-radius:6px 0 0 6px}
+.q-scale-opt:last-child{border-right:1px solid var(--border);border-radius:0 6px 6px 0}
+.q-scale-opt:hover{background:var(--green-pale);color:var(--green-deep)}
+.q-scale-opt.selected{
+  background:linear-gradient(135deg,rgba(61,107,92,.18),rgba(61,107,92,.1));
+  border-color:var(--green-mid);color:var(--green-deep);font-weight:400;
+  position:relative;z-index:1;
+}
+.q-scale-ends{
+  display:flex;justify-content:space-between;
+  font-size:10px;font-weight:300;color:var(--text-light);
+  letter-spacing:.04em;margin-top:5px;padding:0 2px;
+}
+.q-textarea{
+  width:100%;min-height:100px;resize:vertical;
+  background:var(--cream);border:1px solid var(--border);border-radius:8px;
+  padding:14px 16px;font-family:'DM Sans',sans-serif;font-size:14px;
+  font-weight:300;color:var(--text-dark);line-height:1.7;
+  transition:border-color .25s ease,box-shadow .25s ease;outline:none;
+}
+.q-textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,150,96,.1)}
+.q-textarea::placeholder{color:var(--text-light);font-style:italic}
+.q-submit{
+  margin-top:28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+}
+.q-btn{
+  padding:13px 32px;background:var(--green-deep);border:none;border-radius:6px;
+  color:rgba(253,250,246,.92);font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;
+  cursor:pointer;transition:all .25s ease;
+}
+.q-btn:hover{background:var(--green-mid);transform:translateY(-1px);box-shadow:0 4px 16px rgba(44,74,62,.2)}
+.q-save-note{font-size:12px;font-weight:300;color:var(--text-light);font-style:italic}
+.q-submitted{
+  padding:24px 28px;background:var(--green-pale);border-radius:8px;
+  border:1px solid rgba(61,107,92,.2);margin-top:20px;
+  font-size:14px;font-weight:300;color:var(--green-mid);line-height:1.7;
+  display:none;
+}
+.q-submitted.show{display:block}
+.q-submitted-title{
+  font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;
+  color:var(--green-deep);margin-bottom:8px;
+}
+.q-already-done{
+  padding:16px 20px;background:var(--green-pale);border-radius:8px;
+  border:1px solid rgba(61,107,92,.15);margin-bottom:20px;
+  font-size:13px;font-weight:300;color:var(--green-mid);
+  display:flex;align-items:center;gap:10px;
+}
+.q-edit-link{
+  color:var(--gold);text-decoration:none;font-size:12px;
+  letter-spacing:.06em;cursor:pointer;
+}
+.q-edit-link:hover{text-decoration:underline}
+
+/* ═══ MOBILE ═══ */
+@media(max-width:820px){
+  .portal-main{padding:90px 24px 60px}
+  .nav-rail{display:none}
+  .f-header{padding:18px 24px}
+  .card-body{padding:24px 24px 28px}
+  .module-content{padding:24px 24px 30px}
+  .module-header{padding:20px 24px}
+  .ghost-num{font-size:130px;right:-8px}
+  .carousel-wrap{height:240px}
+  .cd-num{font-size:36px}
+}
+@media(max-width:480px){
+  .countdown-grid{gap:0}
+  .cd-sep{font-size:24px}
+  .greeting-name{font-size:38px}
+}
+
+/* ═══ LOADING OVERLAY ═══ */
+.loading-overlay{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(237,232,223,.97);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  transition:opacity .5s ease;
+}
+.loading-ring{
+  width:48px;height:48px;position:relative;
+}
+.loading-ring svg{animation:spin 1.6s linear infinite}
+.loading-ring svg circle{
+  fill:none;stroke:rgba(184,150,96,.25);stroke-width:2;
+}
+.loading-ring svg path{
+  fill:none;stroke:var(--gold);stroke-width:2;
+  stroke-linecap:round;
+}
+.loading-label{
+  font-size:10px;font-weight:400;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--text-light);
+  margin-top:20px;
+}
+</style>
+</head>
+<body>
+
+<div class="corner c-tl"></div>
+<div class="corner c-tr"></div>
+<div class="corner c-bl"></div>
+<div class="corner c-br"></div>
+
+<canvas id="pc"></canvas>
+
+<!-- ─── LOADING OVERLAY ─── -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-ring">
+    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="20"/>
+      <path d="M24 4 A20 20 0 0 1 44 24"/>
+    </svg>
+  </div>
+  <div class="loading-label">Loading your portal</div>
+</div>
+
+
+<!-- ─── SEAL INTRO ─── -->
+<div class="seal-wrap" id="sealWrap" onclick="skipSeal()">
+  <div class="s-above">Northwest Lagotto &nbsp;·&nbsp; Lynden, Washington</div>
+
+  <div class="s-ring">
+    <svg viewBox="0 0 148 148" xmlns="http://www.w3.org/2000/svg">
+      <!-- Outer spinning dashed ring -->
+      <circle class="spin-ring" cx="74" cy="74" r="70"
+        fill="none" stroke="rgba(184,150,96,.38)" stroke-width="1"
+        stroke-dasharray="4 6"/>
+      <!-- Inner solid ring -->
+      <circle cx="74" cy="74" r="58"
+        fill="none" stroke="rgba(184,150,96,.62)" stroke-width="1.2"/>
+      <!-- Inner fill -->
+      <circle cx="74" cy="74" r="56" fill="rgba(253,250,246,.85)"/>
+      <!-- Thin rule -->
+      <line x1="52" y1="78" x2="96" y2="78" stroke="rgba(184,150,96,.5)" stroke-width="0.8"/>
+      <!-- NWL text -->
+      <text x="74" y="73" text-anchor="middle" dominant-baseline="middle"
+        font-family="Cormorant Garamond, serif" font-size="13" font-weight="300"
+        fill="#2c4a3e" letter-spacing="5">NWL</text>
+      <!-- LYNDEN text -->
+      <text x="74" y="88" text-anchor="middle" dominant-baseline="middle"
+        font-family="DM Sans, Arial, sans-serif" font-size="6.5" font-weight="400"
+        fill="#b89660" letter-spacing="3">LYNDEN</text>
+    </svg>
+  </div>
+
+  <div class="s-tagline">Your puppy portal</div>
+  <div class="s-hint"><span class="s-hint-dot"></span>tap or scroll to begin</div>
+</div>
+
+<!-- ─── FIXED HEADER ─── -->
+<header class="f-header" id="fHeader">
+  <span class="f-wm">Northwest Lagotto</span>
+  <div class="f-right">
+    <span class="f-buyer" id="headerBuyer"></span>
+    <span class="f-ct">Your Portal</span>
+  </div>
+</header>
+
+<!-- ─── NAV RAIL ─── -->
+<nav class="nav-rail" id="navRail">
+  <div class="rail-track" id="railTrack">
+    <div class="rail-fill" id="railFill"></div>
+    <div class="rail-dots" id="railDots"></div>
+  </div>
+</nav>
+
+<!-- ─── INVALID ACCESS STATE ─── -->
+<div class="invalid-wrap" id="invalidWrap" style="display:none">
+  <div class="invalid-ornament">✦</div>
+  <h2 class="invalid-title">Private Access</h2>
+  <p class="invalid-msg">This portal is for Northwest Lagotto puppy families. If you believe you should have access, please reach out.<br><br>
+    <a class="invalid-link" href="/cdn-cgi/l/email-protection#8fe1f8e3eee8e0fbfbe0cfe8e2eee6e3a1ece0e2"><span class="__cf_email__" data-cfemail="d3bda4bfb2b4bca7a7bc93b4beb2babffdb0bcbe">[email&#160;protected]</span></a>
+  </p>
+</div>
+
+<!-- ─── MAIN PORTAL CONTENT ─── -->
+<main class="portal-main" id="portalMain">
+
+  <!-- Greeting -->
+  <section class="greeting-section" id="greetingSection" data-module="greeting">
+    <h1 class="greeting-name" id="greetingName">Welcome.</h1>
+    <p class="greeting-sub" id="greetingSub"></p>
+    <div class="scroll-hint" id="scrollHint" onclick="peekScroll(true)">
+      <span class="scroll-hint-label">Begin</span>
+      <div class="scroll-pill">
+        <span class="scroll-dot"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Litter Card -->
+  <div class="litter-card" id="litterCard">
+    <div class="carousel-wrap" id="carouselWrap">
+      <!-- images injected by JS -->
+      <button class="carousel-btn carousel-prev" onclick="carouselStep(-1)">&#8249;</button>
+      <button class="carousel-btn carousel-next" onclick="carouselStep(1)">&#8250;</button>
+      <div class="carousel-caption" id="carouselCaption"></div>
+      <div class="carousel-nav" id="carouselNav"></div>
+    </div>
+    <div class="card-body">
+      <div class="card-eyebrow">Northwest Lagotto &nbsp;·&nbsp; Litter of 2025</div>
+      <div class="countdown-grid" id="countdownGrid">
+        <div class="cd-unit"><span class="cd-num" id="cd-days">--</span><span class="cd-label">Days</span></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><span class="cd-num" id="cd-hours">--</span><span class="cd-label">Hours</span></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><span class="cd-num" id="cd-mins">--</span><span class="cd-label">Minutes</span></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><span class="cd-num" id="cd-secs">--</span><span class="cd-label">Seconds</span></div>
+      </div>
+      <p class="cd-sub" id="cdSub">until your puppy comes home</p>
+      <div class="card-divider"></div>
+      <p class="card-note" id="cardNote"></p>
+      <p class="card-sig">— Mark Nelson, Northwest Lagotto</p>
+    </div>
+  </div>
+
+  <!-- Progress banner -->
+  <div class="progress-banner" id="progressBanner">
+    <span class="pb-dot"></span>
+    This is your personal space — your checklist progress and notes are saved each time you return.
+  </div>
+
+  <!-- Module container — rendered by JS -->
+  <div id="modulesContainer"></div>
+
+</main>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+//  BUYER DATABASE
+//  To add a new buyer: copy the template below and fill in the fields.
+//  URL format: yoursite.com/buyer-portal?id=BUYER_ID
+// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+//  GOOGLE SHEETS LIVE DATA INTEGRATION
+//
+//  Setup: Paste your Apps Script Web App URL below.
+//  Sheet columns: buyer_id | first_name | pickup_date |
+//    modules_unlocked | photos | photo_caption | personal_note |
+//    puppy_assigned | puppy_name | puppy_color | puppy_gender |
+//    matching_note | pickup_completed | day3_unlocked |
+//    week2_unlocked | month3_unlocked | month6_unlocked | year1_unlocked
+//
+//  To get your URL:
+//  1. Open your Google Sheet → Extensions → Apps Script
+//  2. Paste the nwl-portal-api.gs code
+//  3. Deploy → New deployment → Web app → Execute as Me → Anyone
+//  4. Copy the URL and paste it below
+// ═══════════════════════════════════════════════════════════════
+
+const SHEET_API_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID_HERE/exec';
+
+// ─── Normalise raw sheet row → buyer object ───────────────────
+function parseBuyerRow(raw) {
+  function bool(v) { return String(v).trim().toUpperCase() === 'TRUE'; }
+  function arr(v)  {
+    if (!v) return [];
+    // Support JSON array or pipe-separated or comma-separated URLs
+    const s = String(v).trim();
+    if (s.startsWith('[')) { try { return JSON.parse(s); } catch(e) {} }
+    return s.split(/[|\n]/).map(x => x.trim()).filter(Boolean);
+  }
+  return {
+    firstName:       String(raw.first_name  || '').trim(),
+    pickupDate:      String(raw.pickup_date || '').trim(),
+    modulesUnlocked: parseInt(raw.modules_unlocked, 10) || 0,
+    photos:          arr(raw.photos),
+    photoCaption:    String(raw.photo_caption || '').trim(),
+    personalNote:    String(raw.personal_note || '').trim(),
+    puppyAssigned:   bool(raw.puppy_assigned),
+    puppyName:       raw.puppy_name   ? String(raw.puppy_name).trim()   : null,
+    puppyPhoto:      raw.puppy_photo  ? String(raw.puppy_photo).trim()  : null,
+    puppyColor:      raw.puppy_color  ? String(raw.puppy_color).trim()  : null,
+    puppyGender:     raw.puppy_gender ? String(raw.puppy_gender).trim() : null,
+    matchingNote:    raw.matching_note ? String(raw.matching_note).trim() : null,
+    pickupCompleted: bool(raw.pickup_completed),
+    pickupActualDate: raw.pickup_actual_date ? String(raw.pickup_actual_date).trim() : null,
+    day3Unlocked:    bool(raw.day3_unlocked),
+    week2Unlocked:   bool(raw.week2_unlocked),
+    month3Unlocked:  bool(raw.month3_unlocked),
+    month6Unlocked:  bool(raw.month6_unlocked),
+    year1Unlocked:   bool(raw.year1_unlocked),
+  };
+}
+
+// ─── Fetch buyer data live from Google Sheet ──────────────────
+async function fetchBuyerData(id) {
+  // If no API URL configured yet, fall back to local FALLBACK_BUYERS
+  if (!SHEET_API_URL || SHEET_API_URL.includes('YOUR_DEPLOYMENT_ID')) {
+    return FALLBACK_BUYERS[id] || null;
+  }
+  try {
+    const url = SHEET_API_URL + '?buyer_id=' + encodeURIComponent(id);
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    if (json.error || !json.buyer_id) return null;
+    return parseBuyerRow(json);
+  } catch(err) {
+    console.warn('NWL Portal: sheet fetch failed, checking fallback.', err);
+    return FALLBACK_BUYERS[id] || null;
+  }
+}
+
+// ─── FALLBACK / LOCAL BUYERS ──────────────────────────────────
+//  Used when the sheet API is not yet configured OR as a local
+//  override while testing. To add new buyers before the sheet is
+//  set up, add them here. Once the sheet is live, you can leave
+//  this empty — the sheet takes precedence.
+//  URL format: yoursite.com/buyer-portal?id=BUYER_ID
+// ─────────────────────────────────────────────────────────────
+const FALLBACK_BUYERS = {
+
+  // ─── SAMPLE (delete or update once sheet is live) ──────────
+  "denise-2025": {
+    firstName: "Denise",
+    pickupDate: "2025-04-25",
+    modulesUnlocked: 1,
+    photos: [],
+    photoCaption: "Northwest Lagotto · Born February 28, 2025",
+    personalNote: "The litter arrived February 28th — eyes opened this past week, ears not yet. These are the quiet days: all sleep, warmth, and steady growth. Your puppy is in there, and we are watching closely.",
+    puppyAssigned: true,
+    puppyName: 'Farro',
+    puppyPhoto: null,
+    puppyColor: 'Brown Roan',
+    puppyGender: 'male',
+    matchingNote: "Denise, when I watch Farro in the litter I see a dog who is confident without being pushy — he approaches new things with curiosity rather than caution, but he is not the one climbing over his siblings to get there first. He is attentive. He notices when I come into the room. He is going to want to work with you, not around you. Given what you told me about your household — the nose work goals, the active lifestyle, the fact that you work from home — I think he is exactly right for you. He will be a dog who earns your trust and then shows you what he is capable of.",
+    pickupCompleted: false,
+    pickupActualDate: null,
+    day3Unlocked: false,
+    week2Unlocked: false,
+    month3Unlocked: false,
+    month6Unlocked: false,
+    year1Unlocked: false,
+  },
+
+  // ─── TEMPLATE FOR NEW BUYERS (add here while sheet is pending)
+  // "firstname-2025": {
+  //   firstName: "FirstName",
+  //   pickupDate: "2025-05-01",
+  //   modulesUnlocked: 1,
+  //   photos: ["https://your-url/photo1.jpg"],
+  //   photoCaption: "Northwest Lagotto · Litter 2025",
+  //   personalNote: "Your note here.",
+  //   puppyAssigned: false, puppyName: null, puppyPhoto: null,
+  //   puppyColor: null, puppyGender: null, matchingNote: null,
+  //   pickupCompleted: false, pickupActualDate: null,
+  //   day3Unlocked: false, week2Unlocked: false,
+  //   month3Unlocked: false, month6Unlocked: false, year1Unlocked: false,
+  // },
+
+};
+
+const MODULES = [
+  {
+    id:'match-profile', navNum:'✦', navLabel:'Your Match Profile',
+    num:'✦', cat:'BEFORE WE BEGIN', title:'Your Match Profile',
+    subtitle:'Help us understand what you\'re looking for.',
+    phase:'pre', alwaysUnlocked:true,
+    lockMsg: null
+  },
+  {
+    id:'getting-ready', navNum:'I', navLabel:'Getting Ready',
+    num:'I', cat:'PREPARATION', title:'Getting Ready',
+    subtitle:'Everything you need before pickup day.',
+    phase:'pre', unlockAt:1,
+    lockMsg:'This section opens with your next email.'
+  },
+  {
+    id:'safety-health', navNum:'II', navLabel:'Safety & Health',
+    num:'II', cat:'SAFETY', title:'Keeping Your Puppy Safe',
+    subtitle:'Hazards, toxic foods, and what your vet needs to know.',
+    phase:'pre', unlockAt:2,
+    lockMsg:'Opens with Email 2 — coming soon.'
+  },
+  {
+    id:'training', navNum:'III', navLabel:'Training & Socialization',
+    num:'III', cat:'TRAINING', title:'Training & Socialization',
+    subtitle:'The critical window and how to use it.',
+    phase:'pre', unlockAt:3,
+    lockMsg:'Opens with Email 3.'
+  },
+  {
+    id:'grooming', navNum:'IV', navLabel:'Grooming & Dental',
+    num:'IV', cat:'GROOMING', title:'Grooming & Dental Care',
+    subtitle:'The Lagotto coat — what makes it different and how to care for it.',
+    phase:'pre', unlockAt:4,
+    lockMsg:'Opens with Email 4.'
+  },
+  {
+    id:'nose-work', navNum:'V', navLabel:'Exercise & The Nose',
+    num:'V', cat:'ENRICHMENT', title:'Exercise, Enrichment & The Nose',
+    subtitle:'What this breed actually needs — and why the nose changes everything.',
+    phase:'pre', unlockAt:5,
+    lockMsg:'Opens with Email 5.'
+  },
+  {
+    id:'breed-health', navNum:'VI', navLabel:'Breed Health & Feeding',
+    num:'VI', cat:'HEALTH', title:'Breed Health & Feeding',
+    subtitle:'What every Lagotto owner should know about this breed\'s specific health needs.',
+    phase:'pre', unlockAt:6,
+    lockMsg:'Opens with Email 6.'
+  },
+  {
+    id:'who-is-lagotto', navNum:'VII', navLabel:'Who Is the Lagotto',
+    num:'VII', cat:'THE BREED', title:'Who Is the Lagotto Romagnolo',
+    subtitle:'Eight centuries of history — and why it matters for who your dog will be.',
+    phase:'pre', unlockAt:7,
+    lockMsg:'Opens with Email 7.'
+  },
+  {
+    id:'training-tools', navNum:'VIII', navLabel:'Training Tools',
+    num:'VIII', cat:'TRAINING', title:'Training Tools & Resources',
+    subtitle:'The specific techniques, tools, and videos that work best for this breed.',
+    phase:'pre', unlockAt:8,
+    lockMsg:'Opens with Email 8.'
+  },
+  {
+    id:'countdown', navNum:'IX', navLabel:'Final Countdown',
+    num:'IX', cat:'PREPARATION', title:'The Final Countdown',
+    subtitle:'Everything to confirm before pickup day.',
+    phase:'pre', unlockAt:9,
+    lockMsg:'Opens with Email 9.'
+  },
+  {
+    id:'drive-home', navNum:'X', navLabel:'Drive Home & First 48hrs',
+    num:'X', cat:'HOMECOMING', title:'The Drive Home & Your First 48 Hours',
+    subtitle:'What to expect — and how to make it as good as possible.',
+    phase:'pre', unlockAt:10,
+    lockMsg:'Opens with Email 10.'
+  },
+  {
+    id:'welcome-home', navNum:'XI', navLabel:'Welcome Home',
+    num:'XI', cat:'HOMECOMING', title:'Welcome Home — And What Comes Next',
+    subtitle:'The transition complete. What the first months look like.',
+    phase:'pre', unlockAt:11,
+    lockMsg:'Opens with Email 11.'
+  },
+  {
+    id:'meet-puppy', navNum:'⟡', navLabel:'Meet Your Puppy',
+    num:'⟡', cat:'YOUR MATCH', title:'Meet Your Puppy',
+    subtitle:'Introducing the dog we\'ve chosen for your family — and why.',
+    phase:'pairing', unlockAt:'pairing',
+    lockMsg:'Your puppy pairing will be made at around six weeks, when temperament begins to emerge. We\'ll introduce you here the moment the match is confirmed.'
+  },
+  // ─── POST-PICKUP ───────────────────────────────────────────
+  {
+    id:'three-days', navNum:'I', navLabel:'Three Days In',
+    num:'I', cat:'AFTER PICKUP', title:'Three Days In',
+    subtitle:'The immediate adjustment — what\'s normal, what\'s not, and what helps.',
+    phase:'post', unlockAt:'day3',
+    lockMsg:'This section opens three days after your puppy comes home.'
+  },
+  {
+    id:'two-weeks', navNum:'II', navLabel:'Two Weeks Home',
+    num:'II', cat:'AFTER PICKUP', title:'Two Weeks Home',
+    subtitle:'The dust settles. Month-one guidance and what comes next.',
+    phase:'post', unlockAt:'week2',
+    lockMsg:'Opens two weeks after pickup.'
+  },
+  {
+    id:'three-months', navNum:'III', navLabel:'Three Months',
+    num:'III', cat:'AFTER PICKUP', title:'Three Months Together',
+    subtitle:'Adolescence is coming. Here\'s what to expect.',
+    phase:'post', unlockAt:'month3',
+    lockMsg:'Opens at three months.'
+  },
+  {
+    id:'six-months', navNum:'IV', navLabel:'Six Months',
+    num:'IV', cat:'AFTER PICKUP', title:'Six Months',
+    subtitle:'Joint supplements, coat transition, and the spay/neuter conversation.',
+    phase:'post', unlockAt:'month6',
+    lockMsg:'Opens at six months — includes the science on spay/neuter timing.'
+  },
+  {
+    id:'one-year', navNum:'V', navLabel:'Your First Year',
+    num:'V', cat:'AFTER PICKUP', title:'Your First Year',
+    subtitle:'Happy first birthday. Reflections, resources, and the road ahead.',
+    phase:'post', unlockAt:'year1',
+    lockMsg:'Opens at one year.'
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  MODULE CONTENT
+//  Only Module I is fully written for Phase 1.
+//  Others will be added in Phase 2.
+// ═══════════════════════════════════════════════════════════════
+const MODULE_CONTENT = {
+
+  'match-profile': `
+    <p class="mc-lead">Before the puppies are old enough to show us who they are, I want to understand who you are. The questions below inform the pairing decision I make at around six weeks — when temperament starts to emerge and I begin matching dogs to families. There are no right answers, and no answer will disqualify you. The more honestly you answer, the better I can do my job.</p>
+    <p class="mc-p" style="font-size:13px;color:var(--text-light);">Your answers are saved as you go and sent to Mark when you submit. Takes about five minutes.</p>
+
+    <div class="mc-rule"></div>
+
+    <!-- ── PROGRESS BAR ── -->
+    <div style="margin-bottom:28px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span id="mq-step-label" style="font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">Section 1 of 5</span>
+        <span id="mq-pct-label" style="font-size:11px;color:var(--text-light)">0% complete</span>
+      </div>
+      <div style="height:2px;background:var(--border);border-radius:1px;overflow:hidden">
+        <div id="mq-bar" style="height:100%;width:0%;background:linear-gradient(to right,var(--gold-bright),var(--gold));border-radius:1px;transition:width .5s ease"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:10px">
+        <span class="mq-step-dot active" data-step="1">Your Household</span>
+        <span class="mq-step-dot" data-step="2">Your Lifestyle</span>
+        <span class="mq-step-dot" data-step="3">The Dog</span>
+        <span class="mq-step-dot" data-step="4">Training</span>
+        <span class="mq-step-dot" data-step="5">Preferences</span>
+      </div>
+    </div>
+
+    <style>
+      .mq-step-dot{font-size:9px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--border);transition:color .3s ease;cursor:default}
+      .mq-step-dot.active{color:var(--gold)}
+      .mq-step-dot.done{color:var(--green-light)}
+      .mq-section{display:none}
+      .mq-section.active{display:block}
+      .mq-q{margin-bottom:28px}
+      .mq-qlabel{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--green-deep);margin-bottom:6px;line-height:1.3}
+      .mq-qdesc{font-size:12px;font-weight:300;color:var(--text-light);margin-bottom:14px;line-height:1.6}
+      .mq-pills{display:flex;flex-wrap:wrap;gap:8px}
+      .mq-pill{
+        padding:9px 18px;border:1px solid var(--border);border-radius:40px;
+        font-size:13px;font-weight:300;color:var(--text-mid);cursor:pointer;
+        transition:all .22s ease;background:var(--cream);
+        user-select:none;
+      }
+      .mq-pill:hover{border-color:var(--gold-light);color:var(--green-deep)}
+      .mq-pill.sel{
+        background:var(--green-deep);border-color:var(--green-deep);
+        color:#fff;font-weight:400;
+      }
+      .mq-pill.gold-sel{background:var(--gold);border-color:var(--gold);color:#fff}
+      .mq-scale{display:flex;align-items:center;gap:0;width:100%}
+      .mq-scale-end{font-size:11px;font-weight:300;color:var(--text-light);white-space:nowrap;flex-shrink:0;width:96px}
+      .mq-scale-end:last-child{text-align:right}
+      .mq-scale-mid{flex:1;display:flex;justify-content:space-between;padding:0 6px}
+      .mq-scale-pip{
+        width:34px;height:34px;border-radius:50%;
+        border:1.5px solid var(--border);background:var(--cream);
+        display:flex;align-items:center;justify-content:center;
+        font-size:11px;color:var(--text-light);cursor:pointer;
+        transition:all .22s ease;font-weight:300;
+      }
+      .mq-scale-pip:hover{border-color:var(--gold-light);color:var(--green-deep)}
+      .mq-scale-pip.sel{background:var(--green-deep);border-color:var(--green-deep);color:#fff;transform:scale(1.15)}
+      .mq-textarea{
+        width:100%;min-height:90px;padding:14px 16px;
+        border:1px solid var(--border);border-radius:8px;
+        background:var(--cream);
+        font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;
+        color:var(--text-dark);line-height:1.65;resize:vertical;
+        transition:border-color .22s ease;outline:none;
+      }
+      .mq-textarea:focus{border-color:var(--gold-light)}
+      .mq-textarea::placeholder{color:var(--text-light)}
+      .mq-nav{display:flex;justify-content:space-between;align-items:center;margin-top:32px}
+      .mq-btn{
+        padding:11px 28px;border-radius:40px;font-size:13px;font-weight:400;
+        letter-spacing:.06em;cursor:pointer;transition:all .25s ease;border:none;
+        font-family:'DM Sans',sans-serif;
+      }
+      .mq-btn-back{background:transparent;border:1px solid var(--border);color:var(--text-light)}
+      .mq-btn-back:hover{border-color:var(--gold-light);color:var(--text-mid)}
+      .mq-btn-next{background:var(--green-deep);color:#fff}
+      .mq-btn-next:hover{background:var(--green-mid);transform:translateY(-1px);box-shadow:0 4px 14px rgba(44,74,62,.25)}
+      .mq-btn-next:disabled{background:var(--border);cursor:not-allowed;transform:none;box-shadow:none}
+      .mq-btn-submit{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#fff;letter-spacing:.1em}
+      .mq-btn-submit:hover{transform:translateY(-1px);box-shadow:0 4px 18px rgba(184,150,96,.35)}
+      .mq-complete{text-align:center;padding:32px 0 16px}
+      .mq-complete-icon{font-size:32px;color:var(--gold);margin-bottom:16px}
+      .mq-complete-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--green-deep);margin-bottom:10px}
+      .mq-complete-msg{font-size:13px;font-weight:300;color:var(--text-mid);line-height:1.75;max-width:420px;margin:0 auto}
+    </style>
+
+    <!-- ══════════════════════════════════════════
+         SECTION 1 — YOUR HOUSEHOLD
+    ══════════════════════════════════════════ -->
+    <div class="mq-section active" id="mq-s1">
+
+      <div class="mq-q">
+        <div class="mq-qlabel">How many adults live in the home?</div>
+        <div class="mq-pills" data-q="adults">
+          <div class="mq-pill" data-v="1">Just me</div>
+          <div class="mq-pill" data-v="2">Two adults</div>
+          <div class="mq-pill" data-v="3+">Three or more</div>
+        </div>
+      </div>
+
+      <div class="mq-q">
+        <div class="mq-qlabel">Are there children in the household?</div>
+        <div class="mq-pills" data-q="children">
+          <div class="mq-pill" data-v="none">No children at home</div>
+          <div class="mq-pill" data-v="under5">Yes — under 5</div>
+          <div class="mq-pill" data-v="5to10">Yes — ages 5–10</div>
+          <div class="mq-pill" data-v="over10">Yes — over 10</div>
+          <div class="mq-pill" data-v="mixed">Mixed ages</div>
+        </div>
+      </div>
+
+      <div class="mq-q">
+        <div class="mq-qlabel">Other pets?</div>
+        <div class="mq-pills mq-multi" data-q="pets">
+          <div class="mq-pill" data-v="none">No other pets</div>
+          <div class="mq-pill" data-v="dogs">Dogs</div>
+          <div class="mq-pill" data-v="cats">Cats</div>
+          <div class="mq-pill" data-v="small">Small animals</div>
+          <div class="mq-pill" data-v="other">Other</div>
+        </div>
+        <p style="font-size:11px;color:var(--text-light);margin-top:8px">Select all that apply</p>
+      </div>
+
+      <div class="mq-q">
+        <div class="mq-qlabel">What is your living situation?</div>
+        <div class="mq-pills" data-q="living">
+          <div class="mq-pill" data-v="house-yard">House with fenced yard</div>
+          <div class="mq-pill" data-v="house-no-yard">House without fenced yard</div>
+          <div class="mq-pill" data-v="apartment">Apartment or condo</div>
+          <div class="mq-pill" data-v="rural">Rural / acreage</div>
+        </div>
+      </div>
+
+      <div class="mq-nav">
+        <span></span>
+        <button class="mq-btn mq-btn-next" onclick="mqNext(1)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SECTION 2 — YOUR LIFESTYLE
+    ══════════════════════════════════════════ -->
+    <div class="mq-section" id="mq-s2">
+
+      <div class="mq-q">
+        <div class="mq-qlabel">On a typical weekday, how many hours would the dog be home alone?</div>
+        <div class="mq-qdesc">Be honest — this is one of the most important factors in matching energy level.</div>
+        <div class="mq-pills" data-q="alone">
+          <div class="mq-pill" data-v="under2">Under 2 hours</div>
+          <div class="mq-pill" data-v="2to4">2–4 hours</div>
+          <div class="mq-pill" data-v="4to6">4–6 hours</div>
+          <div class="mq-pill" data-v="6to8">6–8 hours</div>
+          <div class="mq-pill" data-v="over8">8+ hours</div>
+        </div>
+      </div>
+
+      <div class="mq-q">
+        <div class="mq-qlabel">How would you describe your work situation?</div>
+        <div class="mq-pills" data-q="work">
+          <div class="mq-pill" data-v="home">Mostly or fully from home</div>
+          <div class="mq-pill" data-v="hybrid">Hybrid — some days in office</div>
+          <div class="mq-pill" data-v="commute">Daily commute</div>
+          <div class="mq-pill" data-v="travel">Travel regularly for work</div>
+          <div class="mq-pill" data-v="retired">Retired / not working</div>
+        </div>
+      </div>
+
+      <div class="mq-q">
+        <div class="mq-qlabel">How would you describe a typical Saturday?</div>
+        <div class="mq-pills" data-q="weekend">
+          <div class="mq-pill" data-v="homebodies">Mostly at home — calm household</div>
+          <div class="mq-pill" data-v="active">Active outdoors — hiking, parks, errands</div>
+          <div class="mq-pill" data-v="social">Social — people often at the house</div>
+          <div class="mq-pill" data-v="varied">Varies a lot week to week</div>
+        </div>
+      </div>
+
+      <div class="mq-q">
+        <div class="mq-qlabel">How physically active would you say your household is?</div>
+        <div class="mq-qdesc">Leisurely ←————————————→ Very active</div>
+        <div class="mq-scale" data-q="activity">
+          <div class="mq-scale-end">Leisurely</div>
+          <div class="mq-scale-mid">
+            <div class="mq-scale-pip" data-v="1">1</div>
+            <div class="mq-scale-pip" data-v="2">2</div>
+            <div class="mq-scale-pip" data-v="3">3</div>
+            <div class="mq-scale-pip" data-v="4">4</div>
+            <div class="mq-scale-pip" data-v="5">5</div>
+          </div>
+          <div class="mq-scale-end">Very active</div>
+        </div>
+      </div>
+
+      <div class="mq-nav">
+        <button class="mq-btn mq-btn-back" onclick="mqBack(2)">← Back</button>
+        <button class="mq-btn mq-btn-next" onclick="mqNext(2)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SECTION 3 — THE DOG YOU ARE LOOKING FOR
+    ══════════════════════════════════════════ -->
+    <div class="mq-section" id="mq-s3">
+
+      <div class="mq-q">
+        <div class="mq-qlabel">What energy level are you hoping for?</div>
+        <div class="mq-qdesc">Calm and settled ←——————————→ Driven and high-energy</div>
+        <div class="mq-scale" data-q="energy">
+          <div class="mq-scale-end">Calm, settled</div>
+          <div class="mq-scale-mid">
+            <div class="mq-scale-pip" data-v="1">1</div>
+            <div class="mq-scale-pip" data-v="2">2</div>
+            <div class="mq-scale-pip" data-v="3">3</div>
+            <div class="mq-scale-pip" data-v="4">4</div>
+            <div class="mq-scale-pip" data-v="5">5</div>
+          </div>
+          <div class="mq-scale-end">Driven, high energy</div>
+        </div>
+      </div>
+
+      <div class="mq-q">
+        <div class="mq-qlabel">How do you feel about a velcro dog?</div>
+        <div class="mq-qdesc">Lagottos range from independent workers to dogs who follow their person room to room. Neither is better — they just suit different households.</div>
+        <div class="mq-pills" data-q="velcro">
+          <div class="mq-pill" data-v="independent">I prefer more independence — a dog with its own thing going on</div>
+          <div class="mq-pill" data-v="middle">Somewhere in the middle is ideal</div>
+          <div class="mq-pill" data-v="velcro">I love a dog who wants to be right with me — the closer the better</div>
+        </div>
+      </div>
+
+      <div class="mq-q">
+        <div class="mq-qlabel">Confidence and boldness?</div>
+        <div class="mq-qdesc">Gentle and careful with new things ←—→ Bold and quick to approach anything</div>
+        <div class="mq-scale" data-q="boldness">
+          <div class="mq-scale-end">Gentle, reserved</div>
+          <div class="mq-scale-mid">
+            <div class="mq-scale-pip" data-v="1">1</div>
+            <div class="mq-scale-pip" data-v="2">2</div>
+            <div class="mq-scale-pip" data-v="3">3</div>
+            <div class="mq-scale-pip" data-v="4">4</div>
+            <div class="mq-scale-pip" data-v="5">5</div>
+          </div>
+          <div class="mq-scale-end">Bold, confident</div>
+        </div>
+      </div>
+
+      <div class="mq-q">
+        <div class="mq-qlabel">How sensitive is your household to noise and reactivity?</div>
+        <div class="mq-qdesc">This affects how well a more alert, vocal dog fits your home.</div>
+        <div class="mq-pills" data-q="noise">
+          <div class="mq-pill" data-v="sensitive">Quite sensitive — noise is a real issue for us (apartment, infants, noise-sensitive family members)</div>
+          <div class="mq-pill" data-v="average">Average — some barking is fine, we would just prefer not to have a chronic barker</div>
+          <div class="mq-pill" data-v="tolerant">Pretty tolerant — noise is not a meaningful concern in our home</div>
+        </div>
+      </div>
+
+      <div class="mq-nav">
+        <button class="mq-btn mq-btn-back" onclick="mqBack(3)">← Back</button>
+        <button class="mq-btn mq-btn-next" onclick="mqNext(3)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SECTION 4 — TRAINING & GOALS
+    ══════════════════════════════════════════ -->
+    <div class="mq-section" id="mq-s4">
+
+      <div class="mq-q">
+        <div class="mq-qlabel">What is your experience with dogs?</div>
+        <div class="mq-pills" data-q="experience">
+          <div class="mq-pill" data-v="first">This is my first dog</div>
+          <div class="mq-pill" data-v="some">I have had dogs before but nothing this involved</div>
+          <div class="mq-pill" data-v="experienced">Experienced — I am comfortable with puppy raising and training</div>
+          <div class="mq-pill" data-v="professional">Very experienced — I have trained dogs at a serious level</div>
+        </div>
+      </div>
+
+      <div class="mq-q">
+        <div class="mq-qlabel">What are your training plans?</div>
+        <div class="mq-pills" data-q="training-plan">
+          <div class="mq-pill" data-v="self">I plan to train primarily myself, using resources and videos</div>
+          <div class="mq-pill" data-v="class">I plan to enroll in puppy classes and work with a trainer</div>
+          <div class="mq-pill" data-v="board">I am considering a board-and-train program</div>
+          <div class="mq-pill" data-v="unsure">I am not sure yet</div>
+        </div>
+      </div>
+
+      <div class="mq-q">
+        <div class="mq-qlabel">What do you most want this dog to be able to do?</div>
+        <div class="mq-qdesc">Select all that genuinely apply — not all that sound appealing.</div>
+        <div class="mq-pills mq-multi" data-q="goals">
+          <div class="mq-pill" data-v="companion">Companion — settled, well-mannered family dog</div>
+          <div class="mq-pill" data-v="nosework">Nose work, AKC Scent Work titles</div>
+          <div class="mq-pill" data-v="truffle">Truffle hunting</div>
+          <div class="mq-pill" data-v="agility">Agility or other dog sports</div>
+          <div class="mq-pill" data-v="therapy">Therapy or service dog work</div>
+          <div class="mq-pill" data-v="show">Conformation / showing</div>
+        </div>
+      </div>
+
+      <div class="mq-q">
+        <div class="mq-qlabel">How committed are you to structured training in the first year?</div>
+        <div class="mq-qdesc">Casual (basic manners is enough) ←——→ Very committed (regular sessions, classes, goals)</div>
+        <div class="mq-scale" data-q="commitment">
+          <div class="mq-scale-end">Basic manners</div>
+          <div class="mq-scale-mid">
+            <div class="mq-scale-pip" data-v="1">1</div>
+            <div class="mq-scale-pip" data-v="2">2</div>
+            <div class="mq-scale-pip" data-v="3">3</div>
+            <div class="mq-scale-pip" data-v="4">4</div>
+            <div class="mq-scale-pip" data-v="5">5</div>
+          </div>
+          <div class="mq-scale-end">Very committed</div>
+        </div>
+      </div>
+
+      <div class="mq-nav">
+        <button class="mq-btn mq-btn-back" onclick="mqBack(4)">← Back</button>
+        <button class="mq-btn mq-btn-next" onclick="mqNext(4)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SECTION 5 — PREFERENCES & ANYTHING ELSE
+    ══════════════════════════════════════════ -->
+    <div class="mq-section" id="mq-s5">
+
+      <div class="mq-q">
+        <div class="mq-qlabel">Do you have a sex preference?</div>
+        <div class="mq-pills" data-q="sex-pref">
+          <div class="mq-pill" data-v="none">No preference</div>
+          <div class="mq-pill" data-v="male-soft">Mild preference for male</div>
+          <div class="mq-pill" data-v="female-soft">Mild preference for female</div>
+          <div class="mq-pill" data-v="male-strong">Strong preference for male</div>
+          <div class="mq-pill" data-v="female-strong">Strong preference for female</div>
+        </div>
+      </div>
+
+      <div class="mq-q">
+        <div class="mq-qlabel">Color preferences?</div>
+        <div class="mq-qdesc">Lagottos come in brown, brown roan, off-white, orange, orange roan, and white with brown markings. Note that puppies often look dramatically different at birth than at adulthood — we will explain this fully at pairing time.</div>
+        <div class="mq-pills" data-q="color">
+          <div class="mq-pill" data-v="open">Completely open — best match over color, always</div>
+          <div class="mq-pill" data-v="brown">Preference for brown shades</div>
+          <div class="mq-pill" data-v="roan">Preference for roan (ticked/mixed)</div>
+          <div class="mq-pill" data-v="white">Preference for white or light</div>
+          <div class="mq-pill" data-v="orange">Preference for orange shades</div>
+        </div>
+      </div>
+
+      <div class="mq-q">
+        <div class="mq-qlabel">Is there anything important we should know about your household, your goals, or what you are hoping for that the questions above did not cover?</div>
+        <textarea class="mq-textarea" id="mq-freetext" placeholder="Anything at all — health considerations in the family, a specific experience you are hoping to have with this dog, a concern you have, something that matters to you. All of it is useful."></textarea>
+      </div>
+
+      <div class="mq-nav">
+        <button class="mq-btn mq-btn-back" onclick="mqBack(5)">← Back</button>
+        <button class="mq-btn mq-btn-submit" onclick="mqSubmit()">Send to Mark ✦</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         COMPLETE STATE
+    ══════════════════════════════════════════ -->
+    <div class="mq-section" id="mq-complete">
+      <div class="mq-complete">
+        <div class="mq-complete-icon">✦</div>
+        <div class="mq-complete-title">Thank you, <span id="mq-complete-name"></span>.</div>
+        <p class="mq-complete-msg">Your answers have been sent and your email client should have opened. If it did not open automatically, use the button below to send manually.<br><br>I read every one of these carefully. Your answers will inform the matching conversation we have at around six weeks.</p>
+        <br>
+        <button class="mq-btn mq-btn-next" id="mq-resend-btn" style="margin:0 auto;display:block">Resend if email did not open</button>
+        <br>
+        <p style="font-size:11px;color:var(--text-light);font-style:italic;text-align:center">Your answers are saved in this portal and will be here when you return.</p>
+      </div>
+    </div>
+
+    <script>
+    // ── Questionnaire state ──────────────────────────────────
+    const MQ = {
+      answers: {},
+      currentStep: 1,
+      totalSteps: 5,
+    };
+
+    // Single-select pills
+    document.querySelectorAll('.mq-pills:not(.mq-multi) .mq-pill').forEach(pill => {
+      pill.addEventListener('click', function() {
+        const group = this.closest('.mq-pills');
+        const q = group.dataset.q;
+        group.querySelectorAll('.mq-pill').forEach(p => p.classList.remove('sel'));
+        this.classList.add('sel');
+        MQ.answers[q] = this.dataset.v;
+        saveMQ();
+      });
+    });
+
+    // Multi-select pills
+    document.querySelectorAll('.mq-pills.mq-multi .mq-pill').forEach(pill => {
+      pill.addEventListener('click', function() {
+        const group = this.closest('.mq-pills');
+        const q = group.dataset.q;
+        // "none" clears others
+        if (this.dataset.v === 'none') {
+          group.querySelectorAll('.mq-pill').forEach(p => p.classList.remove('sel'));
+          this.classList.add('sel');
+          MQ.answers[q] = ['none'];
+        } else {
+          group.querySelector('[data-v="none"]')?.classList.remove('sel');
+          this.classList.toggle('sel');
+          const sel = [...group.querySelectorAll('.mq-pill.sel')].map(p => p.dataset.v);
+          MQ.answers[q] = sel.length ? sel : null;
+        }
+        saveMQ();
+      });
+    });
+
+    // Scale pips
+    document.querySelectorAll('.mq-scale').forEach(scale => {
+      const q = scale.dataset.q;
+      scale.querySelectorAll('.mq-scale-pip').forEach(pip => {
+        pip.addEventListener('click', function() {
+          scale.querySelectorAll('.mq-scale-pip').forEach(p => p.classList.remove('sel'));
+          this.classList.add('sel');
+          MQ.answers[q] = this.dataset.v;
+          saveMQ();
+        });
+      });
+    });
+
+    // Textarea
+    document.getElementById('mq-freetext')?.addEventListener('input', function() {
+      MQ.answers['freetext'] = this.value.trim();
+      saveMQ();
+    });
+
+    function saveMQ() {
+      try {
+        localStorage.setItem('nwl_mq_' + buyerId, JSON.stringify(MQ.answers));
+      } catch(e) {}
+    }
+
+    function restoreMQ() {
+      try {
+        const saved = localStorage.getItem('nwl_mq_' + buyerId);
+        if (!saved) return;
+        const data = JSON.parse(saved);
+        MQ.answers = data;
+
+        // Restore single-select
+        document.querySelectorAll('.mq-pills:not(.mq-multi)').forEach(group => {
+          const q = group.dataset.q;
+          const val = data[q];
+          if (val) {
+            const pip = group.querySelector('[data-v="' + val + '"]');
+            if (pip) pip.classList.add('sel');
+          }
+        });
+        // Restore multi-select
+        document.querySelectorAll('.mq-pills.mq-multi').forEach(group => {
+          const q = group.dataset.q;
+          const vals = data[q];
+          if (vals && Array.isArray(vals)) {
+            vals.forEach(v => {
+              const pip = group.querySelector('[data-v="' + v + '"]');
+              if (pip) pip.classList.add('sel');
+            });
+          }
+        });
+        // Restore scales
+        document.querySelectorAll('.mq-scale').forEach(scale => {
+          const q = scale.dataset.q;
+          const val = data[q];
+          if (val) {
+            const pip = scale.querySelector('[data-v="' + val + '"]');
+            if (pip) pip.classList.add('sel');
+          }
+        });
+        // Restore textarea
+        if (data.freetext) {
+          const ta = document.getElementById('mq-freetext');
+          if (ta) ta.value = data.freetext;
+        }
+
+        // If already submitted, show complete state
+        if (data._submitted) showComplete();
+
+      } catch(e) {}
+    }
+
+    function mqUpdateProgress(step) {
+      MQ.currentStep = step;
+      const pct = Math.round(((step - 1) / MQ.totalSteps) * 100);
+      document.getElementById('mq-bar').style.width = pct + '%';
+      document.getElementById('mq-step-label').textContent = 'Section ' + step + ' of ' + MQ.totalSteps;
+      document.getElementById('mq-pct-label').textContent = pct + '% complete';
+
+      document.querySelectorAll('.mq-step-dot').forEach(d => {
+        const s = parseInt(d.dataset.step);
+        d.classList.remove('active','done');
+        if (s === step) d.classList.add('active');
+        else if (s < step) d.classList.add('done');
+      });
+    }
+
+    function mqShowSection(n) {
+      document.querySelectorAll('.mq-section').forEach(s => s.classList.remove('active'));
+      const el = document.getElementById('mq-s' + n) || document.getElementById('mq-complete');
+      if (el) el.classList.add('active');
+    }
+
+    function mqNext(fromStep) {
+      mqShowSection(fromStep + 1);
+      mqUpdateProgress(fromStep + 1);
+      // Scroll to top of questionnaire
+      document.getElementById('mq-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function mqBack(fromStep) {
+      mqShowSection(fromStep - 1);
+      mqUpdateProgress(fromStep - 1);
+      document.getElementById('mq-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function mqBuildEmailBody() {
+      const a = MQ.answers;
+      const label = (q, map) => {
+        const v = a[q];
+        if (!v) return '(not answered)';
+        if (Array.isArray(v)) return v.join(', ');
+        return map ? (map[v] || v) : v;
+      };
+
+      const lines = [
+        'NORTHWEST LAGOTTO — MATCH PROFILE',
+        'Buyer: ' + (buyer?.firstName || '') + ' (' + buyerId + ')',
+        '─────────────────────────────────────',
+        '',
+        'HOUSEHOLD',
+        'Adults in home: ' + label('adults'),
+        'Children: ' + label('children'),
+        'Other pets: ' + label('pets'),
+        'Living situation: ' + label('living'),
+        '',
+        'LIFESTYLE',
+        'Hours alone (weekday): ' + label('alone'),
+        'Work situation: ' + label('work'),
+        'Typical weekend: ' + label('weekend'),
+        'Activity level (1–5): ' + label('activity'),
+        '',
+        'THE DOG THEY WANT',
+        'Energy level (1–5): ' + label('energy'),
+        'Independence vs velcro: ' + label('velcro'),
+        'Boldness preference (1–5): ' + label('boldness'),
+        'Noise/reactivity tolerance: ' + label('noise'),
+        '',
+        'TRAINING & GOALS',
+        'Dog experience: ' + label('experience'),
+        'Training plans: ' + label('training-plan'),
+        'Goals: ' + label('goals'),
+        'Training commitment (1–5): ' + label('commitment'),
+        '',
+        'PREFERENCES',
+        'Sex preference: ' + label('sex-pref'),
+        'Color preference: ' + label('color'),
+        '',
+        'FREE TEXT',
+        (a.freetext || '(none)'),
+        '',
+        '─────────────────────────────────────',
+        'Submitted via buyer portal',
+      ];
+      return lines.join('\n');
+    }
+
+    function mqSubmit() {
+      MQ.answers._submitted = true;
+      saveMQ();
+
+      const body = encodeURIComponent(mqBuildEmailBody());
+      const subject = encodeURIComponent('Match Profile — ' + (buyer?.firstName || buyerId));
+      const mailto = 'mailto:nwlagotto@gmail.com?subject=' + subject + '&body=' + body;
+
+      // Try to open email client
+      window.location.href = mailto;
+
+      // Store resend link
+      document.getElementById('mq-resend-btn').onclick = () => { window.location.href = mailto; };
+
+      showComplete();
+    }
+
+    function showComplete() {
+      document.getElementById('mq-bar').style.width = '100%';
+      document.getElementById('mq-step-label').textContent = 'Complete';
+      document.getElementById('mq-pct-label').textContent = '100% complete';
+      document.querySelectorAll('.mq-step-dot').forEach(d => d.classList.add('done'));
+      document.getElementById('mq-complete-name').textContent = buyer?.firstName || '';
+      mqShowSection('complete');
+    }
+
+    // Restore on load — called after buyer is confirmed
+    window._mqRestoreHook = restoreMQ;
+    </script>
+  `,
+
+  'getting-ready': `
+    <p class="mc-lead">Good news: the most important preparation happens before your puppy comes home. This section covers everything you need — what to buy, how to set it up, and what to puppy-proof.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Your Preparation Checklist</h2>
+    <p class="mc-p">Check off each item as you get it ready. Your progress here is saved — come back anytime.</p>
+
+    <div class="checklist" id="checklist-getting-ready">
+      <div class="ci" data-id="crate" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Crate</strong> — MidWest Life Stages 36" with divider panel. The divider is essential — it lets you make the space smaller as the puppy grows, which aids housetraining.</div>
+      </div>
+      <div class="ci" data-id="xpen" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Exercise pen</strong> — MidWest 36" minimum height. Lagottos climb — this is not optional.</div>
+      </div>
+      <div class="ci" data-id="bed" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Dog bed</strong> — K9 Ballistics Tough Orthopedic or similar. Durable fabric, not plush. Plush gets destroyed.</div>
+      </div>
+      <div class="ci" data-id="collar" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Collar</strong> — BronzeDog Rolled Leather, 12–16" to start. Rolled leather is gentler on the curly coat than flat collars.</div>
+      </div>
+      <div class="ci" data-id="bowls" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Food and water bowls</strong> — Stainless steel or ceramic. Non-tip. Never plastic.</div>
+      </div>
+      <div class="ci" data-id="cleaner" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Enzymatic cleaner</strong> — Nature's Miracle. You will use this. Buy it now.</div>
+      </div>
+      <div class="ci" data-id="chews" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Chew toys</strong> — Thin bully sticks (6"), yak chews, Kong Classic in puppy size. Freeze Kongs stuffed with peanut butter (xylitol-free) for longer-lasting enrichment.</div>
+      </div>
+      <div class="ci" data-id="gates" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Baby gates</strong> — For stairs and rooms that are off-limits. Install before the puppy arrives.</div>
+      </div>
+      <div class="ci" data-id="clicker" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Clicker</strong> — A standard box clicker. $3. One of the most useful tools you will own.</div>
+      </div>
+      <div class="ci" data-id="treats" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Training treats</strong> — Small, soft, single-ingredient. Zuke's Mini Naturals, freeze-dried chicken, or small pieces of real chicken or beef.</div>
+      </div>
+      <div class="ci" data-id="food" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Puppy food</strong> — Royal Canin Medium Puppy. Have at least two weeks' supply before pickup.</div>
+      </div>
+      <div class="ci" data-id="car" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Car safety</strong> — Sleepypod Mobile Pet Bed or Kurgo Tru-Fit crash-tested harness. Unsecured dogs in moving vehicles are a hazard.</div>
+      </div>
+      <div class="ci" data-id="shampoo" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Shampoo</strong> — Panagenics non-lathering shampoo. Standard shampoos disrupt the Lagotto curl. No conditioner — ever.</div>
+      </div>
+      <div class="ci" data-id="comb" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Wide-tooth metal comb</strong> — For regular combing between baths. Essential for the curly coat.</div>
+      </div>
+      <div class="ci" data-id="heartbeat" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Snuggle Puppy heartbeat toy</strong> — Mimics sleeping with littermates. Helps the first nights significantly.</div>
+      </div>
+    </div>
+    <div class="checklist-progress">
+      <span id="cp-text-getting-ready">0 of 15 complete</span>
+      <div class="cp-bar"><div class="cp-fill" id="cp-fill-getting-ready" style="width:0%"></div></div>
+    </div>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Setting Up the Space</h2>
+    <p class="mc-p">The crate and exercise pen work together as a unit. Connect the pen to the crate opening so the puppy has a larger safe area when you cannot directly supervise. The crate is for sleeping and resting; the pen is for when you need them contained but want them to have more room than the crate alone provides.</p>
+    <p class="mc-p">Put the crate in your bedroom for the first few weeks — at least. Your presence is genuinely settling to a puppy who has just left their litter, and the middle-of-the-night bathroom trips are much more manageable when you are right there.</p>
+    <p class="mc-p">Cover the crate at night with a light blanket on three sides if you want — this makes it feel more den-like. Leave the door side open for airflow. A covered crate tends to produce calmer, quieter settling behavior.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Puppy-Proofing</h2>
+    <p class="mc-p">Do this before the puppy arrives, not after the first incident. Get down to puppy level and look around each room they will have access to. The most common hazards:</p>
+    <h3 class="mc-h3">High Priority</h3>
+    <p class="mc-p"><strong>Electrical cords</strong> — Run them behind furniture or use cord protectors. Puppies chew anything that dangles, and the consequence of chewing a live cord is severe.</p>
+    <p class="mc-p"><strong>Drapery and blind cords</strong> — Tie these up out of reach. Strangulation risk.</p>
+    <p class="mc-p"><strong>Medications, vitamins, supplements</strong> — All of them. Many human medications are acutely toxic to dogs at small doses. Cabinet latches if you have low cabinets.</p>
+    <p class="mc-p"><strong>Toxic plants</strong> — We have sent you a full list. Sago palms are acutely lethal. When in doubt, move it out of reach or remove it entirely.</p>
+    <h3 class="mc-h3">Also Important</h3>
+    <p class="mc-p">Trash cans with lids (or inside cabinets), cleaning products stored low, laundry detergent pods (highly toxic), shoes left on the floor, children's toys with small parts. Baby gates on all stairs — growth plate damage from repeated stair use is real and cumulative.</p>
+    <p class="mc-p">If Pet Poison Control is ever needed: <strong>1-855-764-7661</strong>. Save this number now.</p>
+  `,
+
+  // ─────────────────────────────────────────────────────────────
+  'safety-health': `
+    <p class="mc-lead">This section covers the hazards that matter most in the first weeks — what to watch for, what your vet needs to know, and what to do if something goes wrong. Most of it is simple once you know it.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Scheduling Your First Vet Visit</h2>
+    <p class="mc-p">Your health guarantee requires a vet visit within three days of pickup. Book it now — before you pick up — so you are not scrambling to find an opening when the puppy is already home. Call ahead and let them know you are bringing in a new puppy so they can plan for the full intake exam.</p>
+    <p class="mc-p">Bring everything from your pickup packet: the health certificate, the full vaccination record, deworming history, and the parent health testing results. Your vet will want to see the vaccination schedule to know when boosters are due. Also bring a fresh fecal sample — young puppies commonly carry Giardia or Coccidia even when they look perfectly healthy, and catching it at this first visit is far better than missing it.</p>
+    <p class="mc-p">At this visit, ask your vet about local parasite risks: heartworm protocol for your area, flea and tick prevention, and leptospirosis vaccination if it is recommended in your region. These vary significantly by geography.</p>
+    <p class="mc-p">One thing worth mentioning directly: let your vet know this is a Lagotto Romagnolo. The breed has a few specific health considerations — including some medication sensitivities — that are worth flagging. A vet who has never seen a Lagotto before is not a problem; a vet who has that context will simply be better prepared.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Toxic Foods</h2>
+    <p class="mc-p">None of the following, ever, in any amount:</p>
+    <p class="mc-p"><strong>Chocolate</strong> — all forms. Dark and baking chocolate are most dangerous but milk chocolate in sufficient quantity is also toxic. Theobromine accumulates and causes cardiac and neurological effects.</p>
+    <p class="mc-p"><strong>Grapes and raisins</strong> — the toxic compound is unidentified, which means there is no safe dose. Acute kidney failure can occur even from small amounts in some dogs.</p>
+    <p class="mc-p"><strong>Xylitol</strong> — a sweetener found in sugar-free gum, many peanut butters, some yogurts, and hundreds of other products. Check labels before giving any human food. Causes rapid, severe hypoglycemia.</p>
+    <p class="mc-p"><strong>Onions and garlic</strong> — in any form, including powder. Destroys red blood cells. Cumulative effect means repeated small exposures are dangerous, not just a single large one.</p>
+    <p class="mc-p"><strong>Macadamia nuts</strong> — neurological effects including weakness and tremors. Mechanism unknown.</p>
+    <p class="mc-p"><strong>Alcohol, caffeine, moldy food</strong> — all toxic. Keep the trash secured.</p>
+    <p class="mc-p" style="background:var(--green-pale);border-left:2px solid var(--gold);padding:12px 16px;border-radius:0 6px 6px 0;font-size:13px;">Pet Poison Helpline: <strong>1-855-764-7661</strong> — available 24/7. Save this in your phone now, before you need it.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Toxic Plants</h2>
+    <p class="mc-p">The attached PDF in your pickup packet covers the full list. The one that warrants special mention is the <strong>sago palm</strong> — all parts of this plant are acutely lethal to dogs, including the seeds and roots. If you have one, remove it entirely. No exceptions.</p>
+    <p class="mc-p">When in doubt about any plant: move it out of reach. If the puppy cannot reach it, it cannot harm them. For plants you want to keep at floor level, look them up before the puppy comes home rather than after the first incident.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Joint Health in the First Year</h2>
+    <p class="mc-p">The growth plates in a puppy's bones do not fully close until 12 to 18 months. Before then, repetitive high-impact activity can cause damage that shows up not now but years later as joint problems. The rules for the first year are straightforward:</p>
+    <p class="mc-p">No running on leash, no jogging, no cycling. No repetitive stair climbing — use baby gates and carry the puppy when needed. No jumping from heights: off couches, out of cars, over obstacles. No high-intensity fetch sessions with hard cuts and launches. Free play at the puppy's own pace in a yard is fine; sustained, handler-driven impact is not.</p>
+    <p class="mc-p">Keep the puppy lean throughout the first year. Extra weight on developing joints is a meaningful, well-documented risk factor. If you can feel the ribs easily without pressing, the puppy is at a good weight.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Water, Medications, and Other Hazards</h2>
+    <p class="mc-p"><strong>Toilet lids down</strong> — a young puppy can fall in and drown. This sounds extreme; it is not.</p>
+    <p class="mc-p"><strong>Laundry pods</strong> — acutely toxic and visually appealing to puppies. Keep them locked away, not just on a high shelf.</p>
+    <p class="mc-p"><strong>Cleaning products</strong> — anything under the kitchen or bathroom sink. Cabinet latches are cheap and worth it.</p>
+    <p class="mc-p"><strong>Children and other pets</strong> — supervise all interactions in the first weeks. A child who does not yet understand dog body language and a puppy who does not yet understand how to ask for space is a combination that needs adult management, not optimism.</p>
+  `,
+
+  // ─────────────────────────────────────────────────────────────
+  'training': `
+    <p class="mc-lead">The weeks between now and pickup are, from a developmental standpoint, among the most consequential of your dog's entire life. Understanding why — and what to do with that knowledge — is one of the most useful things this section can give you.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">The Socialization Window</h2>
+    <p class="mc-p">Between roughly 8 and 16 weeks of age, a puppy's brain is in a unique developmental state. During this period, the nervous system is actively building its model of what is normal — what things, people, sounds, and surfaces belong in the world. Experiences during this window are processed differently than they will be at any other time: they are encoded as baseline, as expected, as safe.</p>
+    <p class="mc-p">After approximately 16 weeks, the brain shifts from an open, curious orientation to a more cautious one. Novel things become suspect rather than interesting. This is not a problem — it is adaptive — but it means that the foundation built during the open window is genuinely difficult to retrofit later. Under-socialized puppies become anxious adults, and anxiety in dogs creates a cascade of behavioral problems that are hard to resolve.</p>
+    <p class="mc-p">The American Veterinary Society of Animal Behavior recommends that socialization begin before the vaccine series is complete. The disease risk from thoughtful early socialization in appropriate settings is generally lower than the behavioral risk of keeping a puppy isolated until 16 weeks. Your vet will guide you on which environments are appropriate before full vaccination — puppy kindergarten classes with vaccination requirements, the homes of vaccinated dogs, and surfaces that have not been contaminated by unvaccinated animals are all generally considered safe.</p>
+
+    <h2 class="mc-h2">What to Socialize To</h2>
+    <p class="mc-p">Aim for quality and variety across all of these categories before 16 weeks:</p>
+    <h3 class="mc-h3">People</h3>
+    <p class="mc-p">Men with beards, children of different ages, people in hats or sunglasses, people using mobility aids or moving unpredictably, people in uniforms. The goal is variety, not quantity — ten genuinely different types of people is more valuable than fifty similar ones.</p>
+    <h3 class="mc-h3">Sounds</h3>
+    <p class="mc-p">Traffic, thunder recordings, appliances running, the vacuum cleaner, the doorbell, children playing, a crowd. Play recordings at low volume during meals initially — the pairing with something pleasant changes how the sound is processed.</p>
+    <h3 class="mc-h3">Surfaces and Environments</h3>
+    <p class="mc-p">Grass, gravel, tile, metal grates, sand, carpet, hardwood. Different outdoor environments — a park, a parking lot, a hardware store that allows dogs. Novel environments are inherently enriching for this breed.</p>
+    <h3 class="mc-h3">Handling</h3>
+    <p class="mc-p">Paws, ears, mouth, being held by strangers, being picked up from behind, having their collar held. Do this gently and with treats throughout, starting on day one. You are building the tolerance your groomer and vet will depend on for the next fifteen years.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Foundation Training: What to Start First</h2>
+    <p class="mc-p">Do not wait until the puppy is "settled in" to begin training — the first week home is the ideal time to start, because patterns established early are the ones that stick. Keep sessions to three to five minutes maximum. Always end on a success. Lagottos learn fast and fatigue fast.</p>
+    <h3 class="mc-h3">Name Recognition</h3>
+    <p class="mc-p">Say the name once in a warm, upbeat tone. The moment the puppy looks at you, mark it (click or say "yes") and reward. Do this twenty times in the first day. Within 48 hours most Lagotto puppies are reliably orienting to their name.</p>
+    <h3 class="mc-h3">Recall — The Most Important Command</h3>
+    <p class="mc-p">Coming when called should be the most rewarding thing that happens in your puppy's day — every single time, without exception. Never call the puppy to you for something unpleasant (nail trim, bath, going in the crate when they do not want to). Go get them for those things instead. If you poison the recall word by using it for things they dislike, you will spend years trying to rebuild it.</p>
+    <h3 class="mc-h3">Sit</h3>
+    <p class="mc-p">Hold a treat near the nose and move it slowly back over the head. The puppy's rear goes down as the nose goes up. Mark and reward the moment the bottom touches the ground. Once the behavior is reliable, name it: say "sit" just before the motion. This takes two or three sessions.</p>
+    <h3 class="mc-h3">Crate Introduction</h3>
+    <p class="mc-p">Toss treats into the crate and let the puppy go in and come back out freely. Do not close the door for the first few sessions. Build a strong positive association before confinement is ever introduced. This investment pays off every single night for years.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Separation Anxiety Prevention</h2>
+    <p class="mc-p">This is one of the areas where early intervention matters most and where most people wait too long. A Lagotto who develops true separation anxiety is a genuinely difficult problem — it causes real distress for the dog and significant disruption for the household. The good news is that the prevention protocol is simple if you start it in the first week.</p>
+    <p class="mc-p">Start gentle separations immediately: put the puppy in the crate while you are still home, leave the room for thirty seconds, come back calmly. Build gradually to longer durations over days. The goal is teaching the puppy that your departure is not an event — it is just a normal part of life that always ends with your return.</p>
+    <p class="mc-p">Do not make departures and arrivals into emotional moments. No dramatic goodbyes, no excited greetings when you return. Calm, matter-of-fact. The puppy takes their emotional cues from you.</p>
+    <p class="mc-p">Use a camera to monitor the puppy when you first leave them alone — what you see on camera is the truth, not what you assume based on silence when you return. A puppy who is silently pacing or drooling is not "fine." A puppy who settles and sleeps is fine. The attached article from the Whole Dog Journal covers the distinction between true separation anxiety, normal adjustment, and boredom in detail — it is worth reading before you assume the worst or dismiss the signs.</p>
+  `,
+
+  // ─────────────────────────────────────────────────────────────
+  'grooming': `
+    <p class="mc-lead">The Lagotto coat is one of the most distinctive and most misunderstood things about the breed. Understanding how it actually works will save you significant money, prevent real problems, and let you have an informed conversation with any groomer you work with.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">What Makes the Lagotto Coat Different</h2>
+    <p class="mc-p">The Lagotto has a dense, woolly double coat made of hair rather than fur. The distinction matters: hair grows continuously and does not shed the way fur does. Instead, loose hairs stay trapped within the curls. If those trapped hairs are not regularly combed out, they compress against each other and against the skin — a process called <strong>felting</strong>, not matting. The difference is significant: a mat can be worked apart; a felt is a compressed, solid mass that has to be clipped out. It can conceal skin issues underneath and is genuinely uncomfortable for the dog.</p>
+    <p class="mc-p">The other thing to understand is that most US groomers have never worked on a Lagotto. They will default to what they know — typically a poodle clip, which is incorrect for this breed both aesthetically and functionally. We will cover exactly what to tell your groomer below.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">The Coat Transition Warning</h2>
+    <p class="mc-p">Between approximately 9 and 12 months, your puppy's soft puppy coat begins to give way to the denser, woolier adult coat. This transition period is when felting is most likely to occur — the two coat textures intertwine and compress if not managed carefully. This is not the time to let grooming slide. We will send you a heads-up when your puppy is approaching this stage, but keep it in the back of your mind from the beginning.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">The Critical Rules</h2>
+    <p class="mc-p"><strong>Never brush a dry coat.</strong> Brushing dry curls disrupts the curl structure and causes the very tangling you are trying to prevent. Combing dry is fine; brushing is not.</p>
+    <p class="mc-p"><strong>Never use conditioner.</strong> Conditioner causes severe felting in the Lagotto coat. If a groomer has used conditioner and you need to strip it, a clarifying or stripping shampoo is the only option. Warn any groomer explicitly about this before they start.</p>
+    <p class="mc-p"><strong>Comb before bathing, not after.</strong> Bathing a coat with any tangles already in it sets those tangles permanently as the coat dries.</p>
+    <p class="mc-p"><strong>Air dry only.</strong> Blow drying flattens the curl structure and produces the appearance of a poodle coat. If a groomer wants to blow dry for finishing, ask them not to. The coat needs to dry naturally to maintain its texture.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Starting Grooming From Day One</h2>
+    <p class="mc-p">You do not need to know how to groom a Lagotto to start grooming preparation from day one. What you are building in the first weeks is not technique — it is tolerance. A puppy who grows up comfortable with the table, the comb, having its paws handled, its ears touched, its face worked around — that puppy becomes an adult dog who stands quietly for grooming. That tolerance is one of the most valuable things you can give them, and the window to build it with minimal effort is now.</p>
+    <p class="mc-p">Short sessions, positive, treat-rewarded. Touch the paws. Look in the ears. Run a comb gently through the coat. Pick up each foot. Open the mouth. None of this needs to be a full grooming session — two minutes at a time, several times a week, is all it takes.</p>
+    <p class="mc-p">Your puppy's nails have been trimmed regularly since birth. Continue this — overgrown nails change gait mechanics and cause long-term structural problems. A Dremel rotary tool is gentler and faster once the puppy is comfortable with the vibration; start by simply turning it on near them during meals so it becomes background noise before it is ever introduced to a nail.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">The Felt-Prone Areas</h2>
+    <p class="mc-p">These are the spots that need more frequent attention than the rest of the body: under the ears, the collar area (remove the collar regularly and comb beneath it), the armpits, and the groin. Check these areas more frequently than the rest of the coat, especially during the coat transition period.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">What to Tell Your Groomer</h2>
+    <p class="mc-p">Bring this to the appointment if it helps. The key points for a groomer who has not worked on a Lagotto:</p>
+    <p class="mc-p"><strong>Body and legs:</strong> scissors to 1 to 2 centimeters, following the natural body lines. This is not a clipper breed.</p>
+    <p class="mc-p"><strong>Head:</strong> rounded and curly, 3 to 4 centimeters at the crown. The ears should be short at the top and slightly longer toward the base — the reverse of a poodle ear. Do not cut the hair between the eyes. Trim eyebrows only enough to maintain visibility.</p>
+    <p class="mc-p"><strong>No blow drying for finishing.</strong> Air dry only.</p>
+    <p class="mc-p"><strong>No conditioner.</strong> Under any circumstances.</p>
+    <p class="mc-p">We have included the Laura Tanos cut guide from Regun Kennels in your pickup packet — this is the clearest visual reference available in the US for the correct Lagotto trim and is worth sharing directly with your groomer.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Ear Care</h2>
+    <p class="mc-p">Hair grows inside Lagotto ear canals, and their drop ears limit airflow — two factors that combine to create a structural predisposition to ear infections if ears are not managed proactively. Check the ears weekly. Trim the hair at the ear canal opening to improve airflow. Dry thoroughly after any water exposure — Lagottos love water, and a wet ear canal left undried is a recurring problem in this breed.</p>
+    <p class="mc-p">Current veterinary consensus has moved away from routine ear plucking. Plucking can cause microtrauma to the canal lining that increases infection risk. Trim at the opening; pluck only if your vet specifically recommends it for your dog's anatomy.</p>
+    <p class="mc-p">Signs of infection: head shaking, pawing at the ear, odor, redness, discharge, or sensitivity when the ear is touched. Do not treat with OTC solutions — many are ineffective, and some can cause damage if the eardrum is compromised. Have the vet look.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Dental Care</h2>
+    <p class="mc-p">Puppies teethe between approximately 3 and 6 months. During this period they chew more, may drool slightly, and may show mild gum redness — all normal. Provide appropriate chew outlets: bully sticks, yak chews, frozen Kongs, rubber toys designed for teething. Redirect chewing from inappropriate objects to appropriate ones consistently.</p>
+    <p class="mc-p">Build mouth-touching tolerance with treats first, long before you introduce a toothbrush. Once the puppy accepts your finger in their mouth comfortably, move to a finger brush with dog-safe toothpaste — never human toothpaste, which contains xylitol and fluoride. Brushing three times a week significantly reduces dental disease risk over a lifetime. Daily is better.</p>
+    <p class="mc-p">See your vet if you notice excessive drooling beyond normal teething, persistent bad breath at any age, reluctance to eat, or bleeding gums that does not resolve quickly.</p>
+  `,
+
+  // ─────────────────────────────────────────────────────────────
+  'nose-work': `
+    <p class="mc-lead">There is a piece of information about Lagottos that, once you understand it, changes how you think about exercise, enrichment, and what this breed actually needs. It is about the nose — and it is more significant than most owners realize going in.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Exercise: Less Than You Might Think</h2>
+    <p class="mc-p">A common assumption about working breeds is that they need enormous amounts of physical exercise. With Lagottos, this is not quite right. A healthy adult Lagotto does well with 30 to 60 minutes of intentional daily exercise. What they need alongside that — and what most people underestimate — is mental engagement.</p>
+    <p class="mc-p">For your puppy specifically, the growth plate rules covered in the safety section apply: keep walks short, avoid high-impact activity, no running or jumping from heights. Five minutes per month of age, twice a day, is a useful guideline for the first several months. A three-month-old puppy needs about fifteen minutes of walk, not an hour.</p>
+    <p class="mc-p">Young puppies also need far more sleep than most people expect — sixteen to eighteen hours a day. An overtired, overstimulated puppy bites harder, loses patience faster, and struggles to learn. Enforcing nap times in the crate is not cruelty; it is essential to their development and to your sanity.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Mental Stimulation: What Actually Tires This Breed</h2>
+    <p class="mc-p">A mentally tired Lagotto is a calmer, more settled, more manageable dog than a physically tired one. The breed was selected over centuries to work with its brain — problem-solving, scenting, making independent decisions in the field. That cognitive drive does not disappear because the dog lives in a house. It needs somewhere to go.</p>
+    <p class="mc-p">When Lagottos are bored, they are creative about it. Digging, barking, chewing, redecorating — these are not bad behavior. They are a working dog inventing its own job. Your goal is to give them a better one first.</p>
+    <p class="mc-p">What works especially well: frozen Kongs (stuff with peanut butter, wet food, or kibble mixed with broth, freeze overnight — occupies a puppy meaningfully), snuffle mats (scatter kibble across the mat for foraging — tiring in a way a bowl is not), puzzle feeders at graduated difficulty levels, flirt poles for short high-intensity play sessions, and simply hiding in another room and calling the puppy — hide and seek doubles as recall training.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">The Nose</h2>
+    <p class="mc-p">The Lagotto Romagnolo has one of the most refined scenting abilities of any breed in the world. This is not an accident — it is the product of centuries of selection for a single highly specific task: finding truffles buried beneath the soil of Italian forests, by smell alone, through layers of earth and competing organic material. A human nose has approximately 5 million olfactory receptors. The Lagotto's sits at the high end of the canine range, somewhere around 300 million.</p>
+    <p class="mc-p">This is the nose your puppy is bringing into your home. The practical consequence is that scent-based enrichment is the highest-value mental exercise you can give a Lagotto. Five minutes of nose work is more tiring and more satisfying to this dog than thirty minutes on leash. It engages them neurologically in a way that running simply does not.</p>
+
+    <h2 class="mc-h2">Starting Nose Work at Home — Today</h2>
+    <p class="mc-p">You do not need equipment, training classes, or truffles to begin. Here is the progression starting from day one:</p>
+    <p class="mc-p"><strong>Week one:</strong> Hold a treat in your closed fist. Let the puppy sniff and work at your hand. The moment their nose touches your fist, open it. Repeat ten times. You have introduced the concept that the nose finds the reward.</p>
+    <p class="mc-p"><strong>Week two:</strong> Place three overturned plastic cups on the floor. Put a treat under one while the puppy watches. Release them to sniff. When they indicate the right cup, lift it and reward. Most Lagotto puppies understand this game within one session.</p>
+    <p class="mc-p"><strong>Week three onward:</strong> Hide treats in a room while the puppy waits outside. Release them with a cue — "find it" — and let them search. Start with obvious hides, progress to genuinely difficult ones. This is the backbone of nose work and Lagottos take to it with a speed that is often startling.</p>
+    <p class="mc-p">The AKC Scent Work program offers a structured path forward from here, with titling opportunities at all levels and clubs in most areas. It is one of the few activities that gives a Lagotto a genuine outlet for what they were built to do. Worth looking into once the puppy is settled.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">A Note on Truffle Hunting</h2>
+    <p class="mc-p">If the idea of actually hunting truffles interests you — and the Pacific Northwest is genuinely one of the finest truffle environments in North America, with Oregon white and black truffles growing wild — your Lagotto is the right tool for the job. The foundation you build through nose work at home transfers directly to truffle work. The Oregon Truffle Festival and regional truffle hunting organizations are good starting points. We will have more on this when the time is right.</p>
+  `,
+
+  // ─────────────────────────────────────────────────────────────
+  'breed-health': `
+    <p class="mc-lead">This section covers the health conditions that are specific to the Lagotto Romagnolo — what they are, what responsible breeding does about them, and what you should know going into your first vet visit. The intent is not to alarm you; it is to make you an informed owner who asks the right questions and recognizes the right signs.</p>
+    <p class="mc-p" style="background:var(--green-pale);border-left:2px solid var(--gold);padding:12px 16px;border-radius:0 6px 6px 0;font-size:13px;">All Northwest Lagotto breeding dogs are tested for the conditions below. You will receive the specific parent test results in your pickup packet.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Lagotto Storage Disease (LSD)</h2>
+    <p class="mc-p">LSD is a progressive neurological condition caused by a mutation in the ATG4D gene. It disrupts the normal cellular process for breaking down and recycling proteins. Affected dogs typically begin showing symptoms between four months and four years: increasing anxiety, changes in gait and coordination, and eventually significant neurological deterioration. It is serious and does not improve over time.</p>
+    <p class="mc-p">The genetic test for LSD is definitive. The condition is autosomal recessive — both parents must carry the mutation to produce an affected puppy. A breeder who tests and does not breed two carriers together cannot produce an affected puppy. This is straightforward to prevent; the only way it happens is through careless or untested breeding.</p>
+    <p class="mc-p">If you ever notice progressive changes in your Lagotto's coordination, anxiety levels, or gait — particularly in the first few years — mention LSD specifically to your vet and ask for a neurological evaluation.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Benign Familial Juvenile Epilepsy (BFJE)</h2>
+    <p class="mc-p">BFJE is a neurological condition unique to the Lagotto breed, caused by a mutation in the LGI2 gene. The word "benign" in the name is accurate and important: affected puppies develop focal seizures between approximately five and thirteen weeks of age — tremors, brief episodes of uncoordinated movement, moments of apparent stiffness — and then the seizures resolve on their own, typically by the time the puppy is three to four months old.</p>
+    <p class="mc-p">If your puppy shows any of these signs in the first weeks home, contact us and your vet. Knowing about BFJE means you will recognize what you are looking at rather than being frightened by something that is, in fact, self-limiting. Like LSD, it is autosomal recessive and fully preventable through testing. Parent results will be in your packet.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Joint Health</h2>
+    <p class="mc-p">Lagottos are not a breed with dramatically elevated hip dysplasia rates, but joint health is worth managing proactively in any active medium-sized dog. The exercise guidelines in Module V cover the growth plate rules. The additional things worth knowing:</p>
+    <p class="mc-p">Keep the puppy lean through the first year — extra weight on developing joints is well-documented as a risk factor. Around six months, consider starting a joint supplement: glucosamine with green-lipped mussel has reasonable evidence behind it as a preventive measure and very low risk. YuMOVE is the product I use and recommend. We will revisit this at the six-month post-pickup milestone.</p>
+    <p class="mc-p">If your puppy is ever reluctant to bear weight on a limb, noticeably stiff after rest, or seems sore after activity — get it evaluated. Do not assume it will resolve on its own.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Eye Health</h2>
+    <p class="mc-p">Lagottos have a moderate prevalence of hereditary eye conditions including cataracts, corneal dystrophy, and retinal dysplasia. Breeding dogs should be examined by a board-certified veterinary ophthalmologist. Ask your vet to take a baseline look at your puppy's eyes at the first visit. If you notice cloudiness, persistent discharge, squinting, or any change in your dog's vision as they age, a referral to a veterinary ophthalmologist is appropriate.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Feeding Your Lagotto Puppy</h2>
+    <p class="mc-p">Your puppy is eating Royal Canin Medium Puppy, three times daily. At pickup, feeding will be approximately one-third cup per meal — one cup total per day. Adjust as the puppy grows using body condition rather than the calendar: you should be able to feel the ribs easily without pressing, and the puppy should have a visible waist when viewed from above.</p>
+    <p class="mc-p"><strong>Keep the same food for at least the first week, ideally two.</strong> A new home is already significant stress; adding a food transition produces digestive upset reliably. If you want to change foods, do it gradually over 7 to 10 days: 25% new food for three days, then half and half, then 75% new, then complete.</p>
+    <p class="mc-p">Feed at consistent times each day. A predictable feeding schedule produces predictable digestion, which makes housetraining dramatically easier. Make the last meal no later than 5 or 6pm to allow time for a final bathroom trip before bed.</p>
+    <p class="mc-p">Stay on puppy food until approximately 12 months. Medium-breed puppy formulas are calibrated for the calcium-to-phosphorus ratio that growing joints require — switching to adult food too early can interfere with bone development. At 12 months, transition gradually to an adult formula using the same process above.</p>
+    <p class="mc-p">If loose stools occur in the first few days, add a teaspoon of plain canned pumpkin (not pumpkin pie filling) to each meal. If stools are soft for more than a day or two, or if you see any blood, get a fecal sample to your vet promptly.</p>
+  `,
+
+  // ─────────────────────────────────────────────────────────────
+  'who-is-lagotto': `
+    <p class="mc-lead">This is the section I enjoy most. Not a checklist, not a safety guide — just the story of the dog you are about to bring home. I have been working with this breed for years and I still find their history remarkable. Knowing where a breed comes from helps you understand who they are as individuals.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">An Ancient Italian Working Dog</h2>
+    <p class="mc-p">The Lagotto Romagnolo is one of the oldest dog breeds in the world, with documented history stretching back to at least the late 15th century in the Emilia-Romagna region of northern Italy. The name tells the story: "Lagotto" comes from the regional dialect word for the marshy lagoons around Ravenna, and "Romagnolo" refers to the region itself. They were water dogs — bred to retrieve waterfowl from the cold wetlands, their dense woolly coats protecting them from the water and the thorny undergrowth.</p>
+    <p class="mc-p">For centuries this was their life: working alongside hunters in the marshes, doing the hard physical labor that the Italian countryside required. They were not a nobleman's dog — they were a working man's dog, valued for toughness, intelligence, and an extraordinary nose.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">The Truffle</h2>
+    <p class="mc-p">In the late 19th century, much of the Romagna marshland was drained for agriculture. The waterfowl were gone. The Lagotto's original work had vanished.</p>
+    <p class="mc-p">But something else had been quietly discovered. The same nose that had been trained for centuries to find birds in water could find something far more valuable buried underground. Truffles — intensely aromatic fungi that grow symbiotically with the roots of certain trees — were among the most sought-after culinary ingredients in Italy, and among the hardest to find. Truffle hunters had long used pigs, which locate truffles by smell because the fungi produce a compound that mimics a porcine pheromone. But pigs are difficult to transport, tend to eat what they find, and are impossible to walk discreetly through a village.</p>
+    <p class="mc-p">Dogs were better. And of all the dogs available, the Lagotto was the best. Their nose was already exceptional. They were small enough to move through forest undergrowth, athletic enough to work for hours, and trainable enough to learn to dig up what they found and hand it over rather than consume it. Over several generations, this became the breed's defining work — and selective breeding reinforced it further.</p>
+    <p class="mc-p">Today the Lagotto Romagnolo is the only purebred dog in the world officially recognized as a truffle-hunting breed. It is their designated role in the FCI breed standard. In Italy they are a national treasure — as intertwined with the culture of truffles as the landscape itself.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">The Nose in Numbers</h2>
+    <p class="mc-p">A human nose has approximately 5 million scent receptors. A dog's nose, on average, has between 220 and 300 million. The Lagotto's olfactory ability — honed by centuries of selection pressure for scent work in challenging outdoor conditions — sits at the high end of that range. They can detect truffle scent through several inches of soil, beneath layers of leaves and competing organic material, in rain, wind, and cold.</p>
+    <p class="mc-p">This is the nose your puppy is bringing into your home. It will find the one piece of food that fell behind the refrigerator three months ago. It will know before you do when you are upset. It will detect that a stranger has been in your house. Treat this instrument with respect — and give it work to do.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">They Almost Disappeared</h2>
+    <p class="mc-p">By the 1970s, the Lagotto Romagnolo had dwindled to near-extinction. Industrialized agriculture, declining rural traditions, and the erosion of the truffle-hunting culture had removed the context in which these dogs had thrived for centuries. There were only a handful of dedicated breeders keeping the bloodlines alive.</p>
+    <p class="mc-p">In the late 1980s, a group of passionate Italian breeders organized. They standardized the breed, established a club, registered with the FCI, and began a deliberate preservation effort. The AKC recognized the breed in 2015. The dog you are getting is the direct result of that rescue — a breed pulled back from the edge by people who understood what was at stake.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Who Is This Dog at Home</h2>
+    <p class="mc-p">All of this history produces a particular kind of animal. The Lagotto at home is affectionate, deeply bonded, and quietly observant of everything around them. They are not aloof the way some working breeds can be. They want to be with you. They notice when you are sad. They will find the warmest spot in the room and settle there — ideally touching you.</p>
+    <p class="mc-p">They are also, as you now know, a dog with a brain that needs work. A Lagotto who is bored is a Lagotto who will find something to do — and their ingenuity is remarkable. The same intelligence that makes them exceptional truffle hunters makes them creative chewers and world-class diggers when understimulated.</p>
+    <p class="mc-p">Give them a job, a family, a nose to follow — and you will have one of the most remarkable companions a dog can offer. They are not a common dog. They are worth knowing deeply.</p>
+  `,
+
+  // ─────────────────────────────────────────────────────────────
+  'training-tools': `
+    <p class="mc-lead">This section is about the specific tools, techniques, and resources that work particularly well for Lagottos. The philosophy of training was covered in Module III — this is the practical layer: what to use, how to use it, and where to go to learn more.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Clicker Training — Why It Works for This Breed</h2>
+    <p class="mc-p">The clicker is a small device that makes a sharp, consistent sound. You use it to mark the exact moment a dog does what you want, then follow immediately with a reward. The click tells the dog precisely: that thing you just did right there — that is what I am rewarding.</p>
+    <p class="mc-p">Lagottos are sensitive, observant, and fast. They notice nuance in your voice and body language constantly. The clicker gives them a clear, emotionally neutral signal that is not affected by how you are feeling in the moment. It lets you mark behaviors with precision that verbal markers cannot match — the exact instant all four paws hit the ground on a sit, the precise moment their nose touches a target.</p>
+    <p class="mc-p">Getting started takes about five minutes. Click, then treat — twenty times in a row with no behavior required. You are just pairing the sound with the reward so the click becomes meaningful. Then start using it to mark anything you want to encourage. Puppy sits down? Click, treat. Puppy looks at you instead of the distraction? Click, treat. Keep the clicker in your pocket during free time so you can capture good behavior as it happens.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Crate Games — Susan Garrett</h2>
+    <p class="mc-p">Crate Games is a specific training program developed by Susan Garrett, and it is the most effective approach to crate introduction I have encountered for this breed. The premise is simple: instead of teaching the crate as a place the puppy is put, you teach it as a game the puppy plays and wins.</p>
+    <p class="mc-p">Through a series of small, progressive steps, the dog learns that the crate is the source of good things — that going in and staying in is their choice, and that choice pays off. Dogs trained this way frequently become dogs who go to their crates voluntarily when they want rest, rather than dogs who need to be coaxed in.</p>
+    <p class="mc-p">The full program is available at <a href="https://susangarrettdogagility.com" target="_blank" style="color:var(--gold)">susangarrettdogagility.com</a>. It is a paid program and genuinely worth the investment, especially if your puppy shows any resistance to the crate in the first weeks.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Video Resources</h2>
+    <h3 class="mc-h3">Clicker Training in Action</h3>
+    <p class="mc-p"><a href="https://www.youtube.com/watch?v=CnNhwzIrz2I" target="_blank" style="color:var(--gold)">A Lagotto owner working through clicker training fundamentals</a> — she narrates as she goes, which makes the timing and mechanics easy to follow.</p>
+    <h3 class="mc-h3">Puppy Foundation Skills</h3>
+    <p class="mc-p"><a href="https://www.youtube.com/watch?v=OEBH7J0by_Y" target="_blank" style="color:var(--gold)">Foundation training session 1</a> &nbsp;·&nbsp; <a href="https://www.youtube.com/watch?v=0Q0Whtodp9Q" target="_blank" style="color:var(--gold)">Session 2</a> &nbsp;·&nbsp; <a href="https://www.youtube.com/watch?v=Dd2j85rnhD8" target="_blank" style="color:var(--gold)">Session 3</a></p>
+    <h3 class="mc-h3">Kikopup — Emily Larlham</h3>
+    <p class="mc-p"><a href="https://www.youtube.com/@kikopup" target="_blank" style="color:var(--gold)">youtube.com/@kikopup</a> — One of the best free positive reinforcement training resources available. Her videos on recall, loose-leash walking, sit, down, and leave it are all excellent. The production quality is modest; the training is exceptional.</p>
+    <h3 class="mc-h3">Zak George</h3>
+    <p class="mc-p"><a href="https://www.youtube.com/@zakgeorge" target="_blank" style="color:var(--gold)">youtube.com/@zakgeorge</a> — Covers puppyhood in considerable depth, particularly good for first-time dog owners. Fully positive methods throughout.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Finding a Trainer</h2>
+    <p class="mc-p">Enroll in a puppy kindergarten class as soon as your vet clears it — typically around 12 to 14 weeks. Look for a trainer with CPDT-KA credentials (Certified Professional Dog Trainer, Knowledge Assessed), which indicates a baseline standard of knowledge and ethics.</p>
+    <p class="mc-p">When evaluating any trainer, ask: what happens when a dog gets something wrong? The answer should involve redirection, management, or simply ignoring the behavior — not leash corrections, spray bottles, or aversive devices. Lagottos respond beautifully to positive training and can become anxious and shut down when handled harshly. The wrong trainer with this breed causes damage that takes years to undo.</p>
+  `,
+
+  // ─────────────────────────────────────────────────────────────
+  'countdown': `
+    <p class="mc-lead">Pickup is very close now. This section is a final confirmation checklist — run through it in the few days before you arrive and you will have nothing to scramble for.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Confirm Before You Leave</h2>
+    <div class="checklist" id="checklist-countdown">
+      <div class="ci" data-id="cd-vet" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Vet appointment booked</strong> within three days of pickup — required by health guarantee. Bring your full pickup packet.</div>
+      </div>
+      <div class="ci" data-id="cd-date" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Pickup date and time confirmed</strong> with Northwest Lagotto. If anything has changed, reach out immediately.</div>
+      </div>
+      <div class="ci" data-id="cd-payment" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>Payment arranged</strong> — cash ($4,000), check/cashier's ($4,396), or Venmo/PayPal ($4,983.92 with 2% fee). Confirm method in advance.</div>
+      </div>
+      <div class="ci" data-id="cd-carrier" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>If flying:</strong> soft-sided airline-approved carrier confirmed. Arrival window Friday evening through Sunday afternoon.</div>
+      </div>
+      <div class="ci" data-id="cd-akc" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text"><strong>AKC Reunite ready</strong> — your puppy will be microchipped. Register at akcreunite.org/petowner/register/</div>
+      </div>
+    </div>
+    <div class="checklist-progress">
+      <span id="cp-text-countdown">0 of 5 complete</span>
+      <div class="cp-bar"><div class="cp-fill" id="cp-fill-countdown" style="width:0%"></div></div>
+    </div>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">At Home — Is Everything Ready?</h2>
+    <div class="checklist" id="checklist-home-ready">
+      <div class="ci" data-id="hr-crate" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text">Crate set up, positioned in your bedroom, with divider panel installed</div>
+      </div>
+      <div class="ci" data-id="hr-xpen" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text">Exercise pen attached to crate opening</div>
+      </div>
+      <div class="ci" data-id="hr-food" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text">Two weeks of Royal Canin Medium Puppy on hand</div>
+      </div>
+      <div class="ci" data-id="hr-gates" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text">Baby gates installed on all stairs and off-limit rooms</div>
+      </div>
+      <div class="ci" data-id="hr-proofed" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text">Puppy-proofing complete — cords secured, toxic plants removed, trash cans lidded</div>
+      </div>
+      <div class="ci" data-id="hr-snuggle" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text">Snuggle Puppy heartbeat toy, in the crate and ready</div>
+      </div>
+      <div class="ci" data-id="hr-poison" onclick="toggleCheck(this)">
+        <div class="ci-box"></div>
+        <div class="ci-text">Pet Poison Helpline saved in your phone: 1-855-764-7661</div>
+      </div>
+    </div>
+    <div class="checklist-progress">
+      <span id="cp-text-home-ready">0 of 7 complete</span>
+      <div class="cp-bar"><div class="cp-fill" id="cp-fill-home-ready" style="width:0%"></div></div>
+    </div>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">What You Will Receive at Pickup</h2>
+    <p class="mc-p">Set aside time with us — we will go through everything in person. Your packet includes the health certificate, complete vaccination record with dates and products, deworming records, parent health testing results for LSD, BFJE, hips, and eyes, microchip number and registration instructions, a food sample for the transition, and a blanket carrying the scent of the puppy's litter and mother. That last item is not sentimental — it is genuinely useful on the first night.</p>
+    <p class="mc-p">Please bring your questions. There are no dumb ones. We will make sure you leave feeling ready.</p>
+  `,
+
+  // ─────────────────────────────────────────────────────────────
+  'drive-home': `
+    <p class="mc-lead">Read this the evening before pickup. Not as a checklist — as a mental preparation. The drive home and the first 48 hours set patterns that matter more than most people realize.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">The Drive Home</h2>
+    <p class="mc-p">Your puppy has just left the only home and family they have ever known. They are in a car — a new experience — with people they have met only briefly. The litter is gone. Their mother is gone. Even a well-prepared puppy will find this disorienting, and some will tell you about it.</p>
+    <p class="mc-p">Keep the car calm. No loud music, no excited greetings, no children reaching into the carrier. If someone can sit next to the carrier and simply be a quiet presence — a hand nearby to sniff — that helps. Speak normally and calmly. Your voice is regulating before the puppy knows you well.</p>
+    <p class="mc-p">Expect some whimpering. It is normal and does not mean something is wrong. On a long drive, plan a stop every 90 minutes — leash the puppy before opening the car door, offer a brief boring potty break on leash, then back in the carrier. Bring a towel in case of car sickness; some puppies get sick their first ride and never again.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Arriving Home</h2>
+    <p class="mc-p">Go straight to the bathroom spot before anything else happens. The patch of grass or area where you want them to always go — take them there first, let them sniff, give them the opportunity. When they go, mark it warmly and reward. That is your first successful housetraining moment.</p>
+    <p class="mc-p">Then let them explore a limited area at their own pace. Not the whole house — one or two rooms. Sit on the floor and let them come to you. Do not hover. Do not force interaction. Let them establish their orientation before the introductions begin.</p>
+    <p class="mc-p">Ask visitors to wait 24 hours. The puppy does not need a party on day one. They need quiet and time to figure out where they are.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">The First Night</h2>
+    <p class="mc-p">Your puppy has slept every night of their life pressed against their mother and siblings. That warmth and scent and heartbeat has been the background of their existence. Tonight, for the first time, it is gone. Some puppies tell you about it.</p>
+    <p class="mc-p">Put the crate in your bedroom, close to the bed. Your smell and your breathing are settling in a way nothing else is yet. Put the blanket from the pickup packet in the crate — it carries the scent of the litter. The Snuggle Puppy heartbeat toy, if you have one, goes in now.</p>
+    <p class="mc-p">If the puppy cries, check first: do they need to go out? A two-month-old puppy can hold it for roughly two to three hours overnight. If it has been that long, take them out — brief, boring, leashed, no treats, back in the crate. If they clearly do not need to go, try placing your hand on the crate door so they can smell you. Say "shhh" quietly. Wait.</p>
+    <p class="mc-p">Current behavioral guidance has moved away from letting puppies cry it out. Isolation without response does not build independence — it teaches the puppy that no one comes. That is the opposite of the secure attachment you are building. Respond to genuine distress; ignore theatrical protest once you have confirmed they are physically fine.</p>
+    <p class="mc-p">Set an alarm for the middle of the night for the first week — do not wait for crying. A two-month-old needs a trip roughly every three hours overnight. Get ahead of it. Keep it boring on purpose: no lights, no talking, no play. Out, wait, reward if they go, back in. The more boring nighttime is, the faster they learn it is not worth waking up for.</p>
+    <p class="mc-p">Most puppies settle meaningfully within three to five nights, especially with the crate introduction work already done. The first and second nights are the hardest.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Day One at Home</h2>
+    <p class="mc-p">Keep it calm and short. No plans for the first day beyond getting settled. Let the puppy rest — young puppies need enormous amounts of sleep and an overstimulated puppy is harder than one who has had adequate rest. Nap times in the crate are not optional.</p>
+    <p class="mc-p">Start housetraining from the first moment. Every time the puppy wakes from sleep — outside. Every time they finish eating — outside. Every time they have been playing for ten minutes — outside. If in doubt, go outside. Accidents are not the puppy's fault; they cannot hold it long and do not yet know where the right place is. Your job is to be consistent enough that outside becomes obvious.</p>
+    <p class="mc-p">When they go outside, make it a quiet celebration: a warm "yes, good dog" and a treat. Not frantic — just genuine. They need to understand that outside is where the rewards are.</p>
+  `,
+
+  // ─────────────────────────────────────────────────────────────
+  'welcome-home': `
+    <p class="mc-lead">You did it. The puppy is home, the first night is behind you, and something has shifted — they are starting to know your voice, recognize the routines, show you who they are going to be. That shift is worth every sleepless hour.</p>
+    <p class="mc-p">This is the last module of the pre-pickup series, but it is not the last time you will hear from us. The portal stays active — new sections will open at the three-day, two-week, three-month, six-month, and one-year marks. We will be in touch.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Your Pickup Packet — Review It Now</h2>
+    <p class="mc-p">If you have not already gone through it carefully, now is the time. Keep the vaccination record somewhere you can find it — you will need it at every vet visit until the series is complete at 16 weeks. Register the microchip at akcreunite.org if you have not already. File the parent health testing results with your vet records.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">The Adolescent Phase — A Heads-Up</h2>
+    <p class="mc-p">Around six to eight months — sometimes earlier — most puppies enter an adolescent phase. Commands they knew reliably seem to evaporate. They are distracted, selective about listening, occasionally infuriating. This is neurological, not defiance: the prefrontal cortex, which governs impulse control, is literally still developing. The same brain changes that happen in human teenagers happen in dogs.</p>
+    <p class="mc-p">The answer is not frustration or giving up. Go back to basics, lower expectations temporarily, shorten training sessions, increase your rate of reinforcement, and be patient. Every dog who goes through adolescence comes out the other side. If you stay consistent during this period, you come out with a dog who is genuinely solid.</p>
+    <p class="mc-p">If you find yourself seriously struggling, reach out before it becomes a crisis. A good positive-reinforcement trainer during adolescence makes an enormous difference, and early intervention is always better than waiting.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">The Coat Transition</h2>
+    <p class="mc-p">Between 9 and 12 months the puppy coat begins giving way to the adult coat. This is the highest-risk period for felting. We will send a reminder when you are approaching it — but the note is: do not let grooming slide during this window. If anything, be more vigilant with the comb than at any other time.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Stay in Touch</h2>
+    <p class="mc-p">This is genuine: I want to hear from you. Photos, questions, good news, hard moments — all of it. Every puppy that leaves Northwest Lagotto goes to a family I know, and that relationship does not end at pickup.</p>
+    <p class="mc-p">If something feels wrong, do not wait and wonder. Contact your vet and reach out to us. If something is going beautifully, I want to know that too.</p>
+    <p class="mc-p" style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;font-style:italic;color:var(--green-deep);line-height:1.5;">Thank you for the care and attention you have brought to preparing for this puppy. The families who show up like this — who read the emails, do the research, think hard about what they are taking on — those are the ones who, a year from now, have dogs who are everything they hoped for.</p>
+    <p class="mc-p" style="font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--text-light);">Welcome to the Lagotto world. You are going to love it.</p>
+  `,
+
+  // ─────────────────────────────────────────────────────────────
+  // POST-PICKUP MODULES
+  // ─────────────────────────────────────────────────────────────
+  'three-days': `
+    <p class="mc-lead">Three days in. How are you both doing? This section is here for the immediate adjustment period — what is normal, what warrants attention, and a few things that help right now.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">What Is Normal This Week</h2>
+    <p class="mc-p">Some regression in housetraining — normal. The puppy knew a routine at our home; they are learning yours. Consistent outside trips every hour while awake will re-establish it quickly.</p>
+    <p class="mc-p">Clinginess and following you from room to room — normal. They are bonding and orienting. It will balance out as confidence grows.</p>
+    <p class="mc-p">Sleeping a lot more than you expected — normal and good. Sleep is when the brain consolidates learning and the body grows. Do not mistake a sleeping puppy for a sick one.</p>
+    <p class="mc-p">Some soft stools in the first few days — usually normal stress response. Add a teaspoon of plain pumpkin to meals. If it persists beyond three days or you see blood, call your vet.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">What Warrants a Call to the Vet</h2>
+    <p class="mc-p">Vomiting more than once or twice. Diarrhea lasting more than 24 to 48 hours. Lethargy that is not explained by recent activity. Not eating for more than 24 hours. Any sign of breathing difficulty. Tremors or uncoordinated movement. If something feels wrong to you — call. A good vet would rather you check than wait.</p>
+    <p class="mc-p">And a reminder: your first vet visit should have already happened or be happening within the next day or two. If it has not been booked, book it today.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">A Note on the First Week</h2>
+    <p class="mc-p">Please reply to the email that brought you here and let us know how things are going. Even a few sentences. We want to know.</p>
+  `,
+
+  'two-weeks': `
+    <p class="mc-lead">Two weeks in. If the first few days were an adjustment, these two weeks were the proof that it was worth it. The puppy knows your voice now. They know the routines. They have started to show you who they are going to be.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Month One — What to Focus On</h2>
+    <p class="mc-p">Housetraining should be coming along. By now the puppy likely has a general sense of where outside is and why. Continue consistent schedules — the reliability of when things go in predicts the reliability of when things come out.</p>
+    <p class="mc-p">Socialization window closes around 16 weeks — if your vet has cleared puppy kindergarten, enroll now. Novel environments, surfaces, sounds, and people should still be a priority every week until that window closes.</p>
+    <p class="mc-p">Crate comfort should be solidifying. If there is still significant distress around crating, now is the time to work on it deliberately rather than hoping it resolves — see the Crate Games resource in Module VIII.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">We Would Love to Hear From You</h2>
+    <p class="mc-p">At two weeks in, you have real impressions — things that surprised you, things that went better than expected, questions that have come up. We share experiences from past puppy families with families who are just starting this process, and hearing from someone who has just been where they are is genuinely meaningful to them.</p>
+    <p class="mc-p">If you are willing to share a few words about your experience so far — reply to the email that brought you here, or reach out directly at <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="88e6ffe4e9efe7fcfce7c8efe5e9e1e4a6ebe7e5">[email&#160;protected]</a>. A photo would be welcome too.</p>
+  `,
+
+  'three-months': `
+    <p class="mc-lead">Three months in. The socialization window has closed, the first round of vaccines is complete, and your puppy is becoming a real personality. This section is mostly about what is coming — so you are not caught off guard.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Adolescence Is Coming</h2>
+    <p class="mc-p">Somewhere between four and eight months — often closer to six — most puppies hit an adolescent phase. The commands they knew reliably begin to seem optional. They are easily distracted, sometimes selective about listening, and occasionally test limits in ways that feel deliberate.</p>
+    <p class="mc-p">It is not deliberate. The prefrontal cortex — the part of the brain responsible for impulse control and decision-making — is undergoing significant development during this period. The puppy is literally less able to regulate their behavior than they were at ten weeks. Understanding this makes the phase much easier to navigate.</p>
+    <p class="mc-p">The response: go back to basics, lower your expectations temporarily, shorten training sessions, increase your rate of reinforcement. Keep working. The dogs who come through adolescence with consistent, positive handling become genuinely solid adults. The ones whose training is abandoned during this phase often develop problems that are hard to resolve later.</p>
+    <p class="mc-p">If you are finding it genuinely difficult, reach out. A good trainer during adolescence is worth every penny.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">A Photo Update</h2>
+    <p class="mc-p">Three months in, the puppy looks remarkably different from the day you picked them up. We would love to see it — send a photo to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cea0b9a2afa9a1babaa18ea9a3afa7a2e0ada1a3">[email&#160;protected]</a>. These are some of our favorite emails to receive.</p>
+  `,
+
+  'six-months': `
+    <p class="mc-lead">Six months. The puppy is starting to look like a dog. The adult coat transition is either approaching or already underway. This is a good moment for a few practical reminders.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Joint Supplement — Start Now</h2>
+    <p class="mc-p">Six months is the right time to begin a joint supplement as a preventive measure. The product I use and recommend is YuMOVE — a glucosamine and green-lipped mussel formula with solid evidence behind it. Start with the junior/puppy dose and follow the package guidance. The risk is essentially zero and the potential benefit over a lifetime is meaningful. This is a far better time to start than after a problem develops.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">The Coat Transition</h2>
+    <p class="mc-p">If you have not seen it yet, the coat transition from puppy to adult coat is either happening now or coming soon. This is the highest-risk period for felting — the two coat textures intertwine and compress if not managed. Comb more frequently than usual through this period. The felt-prone areas under the ears, at the collar, in the armpits, and in the groin need checking at least weekly.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">The Spay and Neuter Conversation</h2>
+    <p class="mc-p">Your vet will likely bring this up at the six-month visit if they have not already. The traditional guidance — spay or neuter at six months — has been significantly revised by recent research. For medium and large breed dogs, the evidence now strongly supports waiting until skeletal maturity, which in Lagottos means closer to 12 to 18 months for females and 12 to 15 months for males.</p>
+    <p class="mc-p">The sex hormones — estrogen and testosterone — play a direct role in the closure of growth plates and in the development of ligament and joint stability. Early removal of these hormones is associated with increased rates of certain joint conditions, some cancers, and behavioral changes in some dogs. This is not a fringe position — it is the current consensus of veterinary sports medicine and an increasing number of general practitioners.</p>
+    <p class="mc-p">I have written a detailed piece on the science behind this, which you can read here. Bring it to your vet appointment and have the conversation with the full picture in front of you. Most vets who are current on the research are open to a delayed timeline when the owner understands the reasoning.</p>
+    <p class="mc-p" style="background:var(--green-pale);border-left:2px solid var(--gold);padding:12px 16px;border-radius:0 6px 6px 0;font-size:13px;font-style:italic;">The full spay/neuter science article from the Northwest Lagotto blog will be linked here when this module is finalized.</p>
+  `,
+
+  'one-year': `
+    <p class="mc-lead">One year. Happy birthday to your Lagotto. This feels like a milestone worth acknowledging — and there is something worth saying about what you have built over this year.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">What a Year Produces</h2>
+    <p class="mc-p">The families who show up the way you have — who prepare carefully, work through the difficult weeks, stay consistent through adolescence — they do not just get a dog. They get a relationship that is genuinely different from what most people experience with a pet. A Lagotto at one year who has been raised with care and engagement is a remarkable animal: observant, bonded, capable, alive in a way that is hard to describe until you have seen it.</p>
+    <p class="mc-p">You have built that. It is worth recognizing.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">Adult Food Transition</h2>
+    <p class="mc-p">If you have not already transitioned to an adult food, now is the time. Use the gradual method — 25% new food for three days, then 50/50, then 75% new, then complete — over 7 to 10 days. A medium-breed adult formula is appropriate. Two meals a day, consistent timing.</p>
+
+    <div class="mc-rule"></div>
+    <h2 class="mc-h2">The Northwest Lagotto Family</h2>
+    <p class="mc-p">Past buyer families are one of the most valuable resources available to families just starting this journey. If you are ever willing to speak with someone who is in the early stages of waiting for a puppy, or to share your experience in a review or testimonial, it means an enormous amount — both to those families and to us.</p>
+    <p class="mc-p">You do not need to do anything formal. A note to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e58b928984828a91918aa58288848c89cb868a88">[email&#160;protected]</a> with how things are going, a photo, a few words about your year — that is enough. We would love to hear from you.</p>
+    <p class="mc-p" style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;font-style:italic;color:var(--green-deep);line-height:1.55;">Thank you for trusting us with this. Watching these dogs grow up in good homes is what this work is for.</p>
+    <p style="font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--text-light);margin-top:12px;">— Mark Nelson, Northwest Lagotto</p>
+  `,
+
+  // ─────────────────────────────────────────────────────────────
+  'meet-puppy': function(b) {
+
+    const genderLabel = b.puppyGender === 'male' ? 'Male' : b.puppyGender === 'female' ? 'Female' : null;
+
+    // Puppy photo block
+    const photoBlock = b.puppyPhoto
+      ? `<div style="
+            position:relative;
+            width:100%;
+            max-width:520px;
+            margin:0 auto 36px;
+          ">
+          <div style="
+            position:absolute;inset:-6px;
+            border:1px solid var(--gold-light);
+            border-radius:14px;
+            opacity:.45;
+            pointer-events:none;
+          "></div>
+          <div style="
+            position:absolute;inset:-13px;
+            border:1px solid var(--gold);
+            border-radius:18px;
+            opacity:.2;
+            pointer-events:none;
+          "></div>
+          <img
+            src="${b.puppyPhoto}"
+            alt="${b.puppyName || 'Your puppy'}"
+            style="
+              display:block;
+              width:100%;
+              border-radius:10px;
+              aspect-ratio:4/3;
+              object-fit:cover;
+              box-shadow:0 12px 48px rgba(44,74,62,.18), 0 2px 8px rgba(44,74,62,.1);
+            "
+          />
+          ${b.puppyName ? `
+          <div style="
+            position:absolute;
+            bottom:0;left:0;right:0;
+            background:linear-gradient(to top, rgba(30,45,40,.82) 0%, transparent 100%);
+            border-radius:0 0 10px 10px;
+            padding:32px 22px 18px;
+          ">
+            <div style="
+              font-family:'Cormorant Garamond',serif;
+              font-size:28px;font-weight:300;
+              color:#fff;letter-spacing:.04em;
+            ">${b.puppyName}</div>
+            ${genderLabel ? `<div style="font-size:11px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:3px;">${genderLabel}${b.puppyColor ? ' · ' + b.puppyColor : ''}</div>` : ''}
+          </div>` : ''}
+        </div>`
+      : `<div style="
+            width:100%;max-width:520px;margin:0 auto 36px;
+            aspect-ratio:4/3;
+            background:var(--green-pale);
+            border:1px solid var(--border);
+            border-radius:10px;
+            display:flex;flex-direction:column;
+            align-items:center;justify-content:center;
+            gap:12px;
+          ">
+          <div style="font-size:28px;color:var(--gold);opacity:.6">✦</div>
+          <div style="font-size:12px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;color:var(--text-light);">Photo coming soon</div>
+        </div>`;
+
+    // Stats bar
+    const statsRow = [
+      b.puppyName ? `
+        <div style="flex:1;min-width:100px;background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:14px 18px;">
+          <div style="font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--text-light);margin-bottom:6px;">Name</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--green-deep)">${b.puppyName}</div>
+        </div>` : '',
+      genderLabel ? `
+        <div style="flex:1;min-width:100px;background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:14px 18px;">
+          <div style="font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--text-light);margin-bottom:6px;">Sex</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--green-deep)">${genderLabel}</div>
+        </div>` : '',
+      b.puppyColor ? `
+        <div style="flex:1;min-width:100px;background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:14px 18px;">
+          <div style="font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--text-light);margin-bottom:6px;">Color</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--green-deep)">${b.puppyColor}</div>
+        </div>` : '',
+    ].filter(Boolean).join('');
+
+    // Mark's matching note
+    const matchBlock = b.matchingNote
+      ? `<div style="
+            background:var(--green-pale);
+            border-left:2px solid var(--gold);
+            padding:26px 28px;
+            border-radius:0 10px 10px 0;
+            margin:36px 0;
+            position:relative;
+          ">
+          <div style="
+            position:absolute;top:20px;right:22px;
+            font-size:42px;color:var(--gold);opacity:.12;
+            font-family:'Cormorant Garamond',serif;
+            line-height:1;user-select:none;
+          ">"</div>
+          <div style="font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;">
+            Why this puppy — a note from Mark
+          </div>
+          <p style="
+            font-family:'Cormorant Garamond',serif;
+            font-size:19px;font-weight:300;font-style:italic;
+            color:var(--green-deep);line-height:1.75;margin:0;
+          ">${b.matchingNote}</p>
+        </div>` : '';
+
+    const pickupFmt = b.pickupDate
+      ? new Date(b.pickupDate + 'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})
+      : 'your scheduled pickup date';
+
+    const puppyFirst = b.puppyName || 'your puppy';
+
+    return `
+    <style>
+      @keyframes pairingReveal {
+        from { opacity:0; transform:translateY(14px); }
+        to   { opacity:1; transform:translateY(0); }
+      }
+      .pairing-reveal { animation: pairingReveal .7s ease both; }
+      .pairing-reveal-1 { animation-delay: .1s; }
+      .pairing-reveal-2 { animation-delay: .3s; }
+      .pairing-reveal-3 { animation-delay: .5s; }
+      .pairing-reveal-4 { animation-delay: .7s; }
+      .pairing-reveal-5 { animation-delay: .9s; }
+    </style>
+
+    <div class="pairing-reveal pairing-reveal-1">
+      <p class="mc-lead">The match has been made.</p>
+      <p class="mc-p" style="color:var(--text-light);font-style:italic;font-size:14px;margin-top:-8px;margin-bottom:32px;">
+        Six weeks of watching — this is the one.
+      </p>
+    </div>
+
+    <div class="pairing-reveal pairing-reveal-2">
+      ${photoBlock}
+    </div>
+
+    ${statsRow ? `
+    <div class="pairing-reveal pairing-reveal-3">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px;">${statsRow}</div>
+    </div>` : ''}
+
+    <div class="pairing-reveal pairing-reveal-4">
+      ${matchBlock}
+    </div>
+
+    <div class="pairing-reveal pairing-reveal-5">
+      <div class="mc-rule"></div>
+      <h2 class="mc-h2">A Note on Color</h2>
+      <p class="mc-p">Lagotto puppies often look dramatically different at birth — and through the first several months — compared to who they will be as adults. This is especially true with roan coats, which begin as flat solid color and gradually develop the ticked, salted pattern over the first year or two. If ${puppyFirst}'s current color surprises you, trust the genetics and the process: what you see now is not the finished coat.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);border-radius:8px;overflow:hidden;margin:24px 0;">
+        <div style="background:var(--cream);padding:18px 20px;">
+          <div style="font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px;">At Birth</div>
+          <p style="font-size:13px;font-weight:300;color:var(--text-mid);line-height:1.6;margin:0;">Flat, solid color. Roan puppies look deceptively uniform — the ticking is not yet visible.</p>
+        </div>
+        <div style="background:var(--cream);padding:18px 20px;">
+          <div style="font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px;">At 3–6 Months</div>
+          <p style="font-size:13px;font-weight:300;color:var(--text-mid);line-height:1.6;margin:0;">The roan pattern begins to emerge as lighter hairs intersperse. The coat is in active transition.</p>
+        </div>
+        <div style="background:var(--cream);padding:18px 20px;">
+          <div style="font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px;">At 1–2 Years</div>
+          <p style="font-size:13px;font-weight:300;color:var(--text-mid);line-height:1.6;margin:0;">The adult coat and final roan expression are established. The dog you pictured in the breed standard is now visible.</p>
+        </div>
+      </div>
+
+      <p class="mc-p">The adult coat texture also transitions between 9 and 12 months — the soft puppy coat gives way to the denser, woolier adult coat. This is the highest-risk period for felting. See Module IV for the full detail on managing it.</p>
+
+      <div class="mc-rule"></div>
+      <h2 class="mc-h2">What Happens Now</h2>
+      <p class="mc-p">You know who is coming home. Pickup is <strong>${pickupFmt}</strong> — everything in Modules I through XI still applies, and now you are preparing for a specific dog.</p>
+      <p class="mc-p">If you have questions between now and then, reach out directly: <a href="/cdn-cgi/l/email-protection#4c223b202d2b233838230c2b212d2520622f2321" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="4d233a212c2a223939220d2a202c2421632e2220">[email&#160;protected]</span></a> or <a href="tel:3602236989" style="color:var(--gold)">360-223-6989</a>.</p>
+
+      <p style="
+        font-family:'Cormorant Garamond',serif;
+        font-size:22px;font-weight:300;font-style:italic;
+        color:var(--green-deep);line-height:1.5;
+        margin-top:36px;padding-top:28px;
+        border-top:1px solid var(--border);
+      ">Welcome to the family, ${b.puppyName || 'little one'}.</p>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:var(--text-light);margin-top:8px;">— Mark Nelson, Northwest Lagotto</p>
+    </div>
+    `;
+  },
+
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  GLOBALS
+// ═══════════════════════════════════════════════════════════════
+let buyer = null;
+let buyerId = null;
+let carouselIndex = 0;
+let carouselTimer = null;
+const g = id => document.getElementById(id);
+
+// ═══════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════
+//  GLOBALS
+// ═══════════════════════════════════════════════════════════════
+let buyer = null;
+let buyerId = null;
+let carouselIndex = 0;
+let carouselTimer = null;
+const g = id => document.getElementById(id);
+
+// ═══════════════════════════════════════════════════════════════
+//  LOADING OVERLAY — shown while sheet data fetches
+// ═══════════════════════════════════════════════════════════════
+function showLoadingOverlay() {
+  const el = g('loadingOverlay');
+  if (el) el.style.display = 'flex';
+}
+function hideLoadingOverlay() {
+  const el = g('loadingOverlay');
+  if (!el) return;
+  el.style.opacity = '0';
+  setTimeout(() => { el.style.display = 'none'; }, 500);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+  initParticles();
+  showLoadingOverlay();
+
+  // Read buyer ID from URL
+  const params = new URLSearchParams(window.location.search);
+  buyerId = (params.get('id') || '').toLowerCase().trim();
+
+  // ── Fetch live from sheet (falls back to FALLBACK_BUYERS) ──
+  try {
+    buyer = await fetchBuyerData(buyerId);
+  } catch(e) {
+    buyer = null;
+  }
+
+  hideLoadingOverlay();
+
+  if (!buyer) {
+    // No valid buyer — show private access state
+    g('sealWrap').style.display = 'none';
+    g('invalidWrap').style.display = 'flex';
+    return;
+  }
+
+  // Check if seal has been shown this session
+  const sealKey = 'nwl_seal_' + buyerId;
+  const sealShown = sessionStorage.getItem(sealKey);
+
+  if (sealShown) {
+    g('sealWrap').style.display = 'none';
+    revealContent();
+  } else {
+    sessionStorage.setItem(sealKey, '1');
+    setTimeout(dissolveSeal, 3800);
+  }
+});
+
+function skipSeal() {
+  clearTimeout(window._sealTimer);
+  dissolveSeal();
+}
+
+function dissolveSeal() {
+  const seal = g('sealWrap');
+  seal.classList.add('out');
+  setTimeout(revealContent, 1100);
+}
+
+function revealContent() {
+  g('sealWrap').style.display = 'none';
+  initContent();
+}
+
+function initContent() {
+  // Header
+  g('headerBuyer').textContent = buyer.firstName;
+  setTimeout(() => g('fHeader').classList.add('vis'), 200);
+  setTimeout(() => g('navRail').classList.add('vis'), 400);
+  setTimeout(() => g('portalMain').classList.add('revealed'), 100);
+
+  // Greeting
+  const name = g('greetingName');
+  name.textContent = 'Welcome, ' + buyer.firstName + '.';
+  setTimeout(() => name.classList.add('on'), 300);
+
+  const sub = g('greetingSub');
+  const days = daysUntil(buyer.pickupDate);
+  if (days > 0) {
+    sub.innerHTML = 'Your puppy arrives in <strong>' + days + '</strong> ' + (days === 1 ? 'day' : 'days') + '.';
+  } else if (days === 0) {
+    sub.textContent = 'Today is the day.';
+  } else {
+    sub.textContent = buyer.firstName + '\'s puppy is home.';
+  }
+  setTimeout(() => sub.classList.add('on'), 300);
+
+  // Scroll hint — appears, then auto-peek after idle pause
+  setTimeout(() => {
+    g('scrollHint').classList.add('on');
+    // If user hasn't scrolled after 4.5s, trigger the gentle peek
+    window._peekTimer = setTimeout(() => {
+      if (window.scrollY < 40) peekScroll(false);
+    }, 4500);
+  }, 800);
+
+  // Cancel peek if user scrolls themselves
+  window.addEventListener('scroll', () => {
+    clearTimeout(window._peekTimer);
+  }, { once: true });
+
+  // Litter card
+  initCarousel();
+  initCountdown();
+  g('cardNote').textContent = buyer.personalNote;
+
+  // Progress banner
+  setTimeout(() => g('progressBanner').classList.add('on'), 600);
+
+  // Modules
+  renderModules();
+  initNavRail();
+
+  // Restore checklist
+  restoreChecklists();
+
+  // Restore match questionnaire
+  if (window._mqRestoreHook) window._mqRestoreHook();
+
+  // Scroll tracking
+  initScrollTracking();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CAROUSEL
+// ═══════════════════════════════════════════════════════════════
+function initCarousel() {
+  const wrap = g('carouselWrap');
+  const photos = buyer.photos || [];
+  if (!photos.length) { wrap.style.display = 'none'; return; }
+
+  // Create images
+  photos.forEach((src, i) => {
+    const img = document.createElement('img');
+    img.className = 'carousel-img' + (i === 0 ? ' active' : '');
+    img.src = src;
+    img.alt = 'Northwest Lagotto litter';
+    wrap.insertBefore(img, wrap.querySelector('.carousel-btn'));
+  });
+
+  // Nav dots
+  const nav = g('carouselNav');
+  photos.forEach((_, i) => {
+    const d = document.createElement('span');
+    d.className = 'c-dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goCarousel(i);
+    nav.appendChild(d);
+  });
+
+  // Caption
+  g('carouselCaption').textContent = buyer.photoCaption || '';
+
+  if (photos.length > 1) startCarouselTimer();
+}
+
+function startCarouselTimer() {
+  carouselTimer = setInterval(() => carouselStep(1), 6000);
+}
+
+function carouselStep(dir) {
+  clearInterval(carouselTimer);
+  const photos = buyer.photos || [];
+  carouselIndex = (carouselIndex + dir + photos.length) % photos.length;
+  goCarousel(carouselIndex);
+  startCarouselTimer();
+}
+
+function goCarousel(idx) {
+  carouselIndex = idx;
+  document.querySelectorAll('.carousel-img').forEach((img, i) => {
+    img.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.c-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === idx);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  COUNTDOWN
+// ═══════════════════════════════════════════════════════════════
+function daysUntil(dateStr) {
+  const target = new Date(dateStr + 'T12:00:00');
+  const now = new Date();
+  return Math.ceil((target - now) / 86400000);
+}
+
+function initCountdown() {
+  function tick() {
+    const target = new Date(buyer.pickupDate + 'T12:00:00');
+    const now = new Date();
+    const diff = target - now;
+
+    if (diff <= 0) {
+      if (buyer.pickupCompleted) {
+        g('countdownGrid').style.display = 'none';
+        g('cdSub').textContent = 'Your puppy is home. ✦';
+      } else {
+        ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id => g(id).textContent = '00');
+        g('cdSub').textContent = 'Pickup day!';
+      }
+      return;
+    }
+
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+
+    const pad = n => String(n).padStart(2, '0');
+    g('cd-days').textContent = pad(d);
+    g('cd-hours').textContent = pad(h);
+    g('cd-mins').textContent = pad(m);
+    const secEl = g('cd-secs');
+    const prev = secEl.textContent;
+    secEl.textContent = pad(s);
+    if (prev !== pad(s)) {
+      secEl.classList.remove('pulse');
+      void secEl.offsetWidth;
+      secEl.classList.add('pulse');
+    }
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  MODULES — RENDER
+// ═══════════════════════════════════════════════════════════════
+function isModuleUnlocked(mod) {
+  if (mod.alwaysUnlocked) return true;
+  const n = mod.unlockAt;
+  if (typeof n === 'number') return buyer.modulesUnlocked >= n;
+  if (n === 'pairing') return buyer.puppyAssigned === true;
+  if (n === 'day3') return buyer.day3Unlocked;
+  if (n === 'week2') return buyer.week2Unlocked;
+  if (n === 'month3') return buyer.month3Unlocked;
+  if (n === 'month6') return buyer.month6Unlocked;
+  if (n === 'year1') return buyer.year1Unlocked;
+  return false;
+}
+
+function renderModules() {
+  const container = g('modulesContainer');
+  let lastPhase = '';
+
+  MODULES.forEach(mod => {
+    const unlocked = isModuleUnlocked(mod);
+
+    // Group label
+    if (mod.phase !== lastPhase) {
+      const label = document.createElement('div');
+      label.className = 'section-group-label';
+      if (mod.phase === 'pre') label.textContent = 'Before Pickup';
+      else if (mod.phase === 'pairing') label.textContent = 'Your Match';
+      else if (mod.phase === 'post') label.textContent = 'After Pickup';
+      container.appendChild(label);
+      lastPhase = mod.phase;
+    }
+
+    const section = document.createElement('section');
+    section.className = 'module' +
+      (mod.phase === 'pairing' ? ' pairing' : '') +
+      (mod.phase === 'post' && !unlocked ? ' post-pickup' : '');
+    section.id = 'module-' + mod.id;
+    section.dataset.moduleId = mod.id;
+
+    const ghostNum = document.createElement('div');
+    ghostNum.className = 'ghost-num';
+    ghostNum.textContent = mod.num;
+
+    const inner = document.createElement('div');
+    inner.className = 'module-inner';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'module-header';
+    if (unlocked) header.onclick = () => toggleModule(section);
+    header.innerHTML = `
+      <span class="module-num">${mod.num}</span>
+      <div class="module-meta">
+        <div class="module-cat">${mod.cat}</div>
+        <div class="module-title">${mod.title}</div>
+      </div>
+      <span class="module-chevron">${unlocked ? '▾' : '⟡'}</span>
+    `;
+
+    // Body
+    const body = document.createElement('div');
+    body.className = 'module-body';
+
+    if (unlocked) {
+      const rawContent = MODULE_CONTENT[mod.id];
+      const content = (typeof rawContent === 'function')
+        ? rawContent(buyer)
+        : (rawContent || `<p class="mc-lead" style="color:var(--text-light);font-style:italic">Content for this section will be added shortly.</p>`);
+      body.innerHTML = `<div class="module-content">${content}</div>`;
+    } else {
+      body.innerHTML = `
+        <div class="lock-overlay">
+          <div class="lock-icon">⟡</div>
+          <div class="lock-title">${mod.phase === 'pairing' ? 'Your match is being made' : 'Coming soon'}</div>
+          <p class="lock-msg">${mod.lockMsg || 'This section will open as you get closer to pickup day.'}</p>
+        </div>`;
+      // Locked modules show their body by default (no animation needed)
+      body.style.maxHeight = '300px';
+    }
+
+    inner.appendChild(header);
+    inner.appendChild(body);
+    section.appendChild(ghostNum);
+    section.appendChild(inner);
+    container.appendChild(section);
+
+    // Auto-open first unlocked module
+    if (mod.id === 'getting-ready' && unlocked) {
+      setTimeout(() => openModule(section), 900);
+    }
+    // Auto-open pairing module when newly unlocked — this is the moment
+    if (mod.id === 'meet-puppy' && unlocked) {
+      setTimeout(() => openModule(section), 600);
+    }
+  });
+}
+
+function toggleModule(section) {
+  if (section.classList.contains('open')) {
+    closeModule(section);
+  } else {
+    openModule(section);
+  }
+}
+function openModule(section) {
+  section.classList.add('open');
+  updateNavProgress();
+}
+function closeModule(section) {
+  section.classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  NAV RAIL
+// ═══════════════════════════════════════════════════════════════
+function initNavRail() {
+  const dotsContainer = g('railDots');
+  const trackHeight = Math.min(window.innerHeight * 0.65, 460);
+  g('railTrack').style.height = trackHeight + 'px';
+
+  MODULES.forEach(mod => {
+    const dot = document.createElement('div');
+    const unlocked = isModuleUnlocked(mod);
+    dot.className = 'r-dot' + (!unlocked ? (mod.phase === 'post' ? ' post-locked' : ' locked') : '');
+    dot.dataset.target = 'module-' + mod.id;
+
+    const label = document.createElement('span');
+    label.className = 'r-dot-label';
+    label.textContent = mod.navLabel;
+    dot.appendChild(label);
+
+    if (unlocked) {
+      dot.onclick = () => {
+        const el = g('module-' + mod.id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+    }
+    dotsContainer.appendChild(dot);
+  });
+}
+
+function updateNavProgress() {
+  const dots = g('railDots').querySelectorAll('.r-dot');
+  const sections = document.querySelectorAll('.module');
+  const scrollY = window.scrollY;
+  const vh = window.innerHeight;
+  let activeIdx = 0;
+
+  sections.forEach((section, i) => {
+    const rect = section.getBoundingClientRect();
+    if (rect.top < vh * 0.45) activeIdx = i;
+  });
+
+  dots.forEach((dot, i) => {
+    dot.classList.remove('active', 'done');
+    if (i < activeIdx) dot.classList.add('done');
+    else if (i === activeIdx) dot.classList.add('active');
+  });
+
+  // Fill rail
+  const pct = MODULES.length > 1 ? (activeIdx / (MODULES.length - 1)) * 100 : 0;
+  g('railFill').style.height = pct + '%';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SCROLL TRACKING — module reveal + nav update
+// ═══════════════════════════════════════════════════════════════
+function initScrollTracking() {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+      }
+    });
+    updateNavProgress();
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.module').forEach(m => observer.observe(m));
+  window.addEventListener('scroll', updateNavProgress, { passive: true });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CHECKLIST — localStorage persistence
+// ═══════════════════════════════════════════════════════════════
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  saveChecklists();
+  updateChecklistProgress(el.closest('.checklist'));
+}
+
+function updateChecklistProgress(listEl) {
+  if (!listEl) return;
+  const all = listEl.querySelectorAll('.ci');
+  const done = listEl.querySelectorAll('.ci.checked');
+  const listId = listEl.id;
+  const textEl = g('cp-text-' + listId.replace('checklist-',''));
+  const fillEl = g('cp-fill-' + listId.replace('checklist-',''));
+  if (textEl) textEl.textContent = done.length + ' of ' + all.length + ' complete';
+  if (fillEl) fillEl.style.width = (done.length / all.length * 100) + '%';
+}
+
+function saveChecklists() {
+  try {
+    const key = 'nwl_checks_' + buyerId;
+    const state = {};
+    document.querySelectorAll('.ci[data-id]').forEach(ci => {
+      state[ci.dataset.id] = ci.classList.contains('checked');
+    });
+    localStorage.setItem(key, JSON.stringify(state));
+  } catch(e) {}
+}
+
+function restoreChecklists() {
+  try {
+    const key = 'nwl_checks_' + buyerId;
+    const raw = localStorage.getItem(key);
+    if (!raw) return;
+    const state = JSON.parse(raw);
+    Object.entries(state).forEach(([id, checked]) => {
+      const el = document.querySelector(`.ci[data-id="${id}"]`);
+      if (el && checked) el.classList.add('checked');
+    });
+    document.querySelectorAll('.checklist').forEach(updateChecklistProgress);
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PEEK SCROLL — reveals crown of litter card, invites the user in
+// ═══════════════════════════════════════════════════════════════
+function peekScroll(immediate) {
+  const card = g('litterCard');
+  if (!card) return;
+
+  // If the user clicked the hint — smooth scroll directly to card
+  if (immediate) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+
+  // Auto peek: drift down just enough to crown the litter card
+  const cardTop = card.getBoundingClientRect().top + window.scrollY;
+  const peekTarget = cardTop - 80;
+  window.scrollTo({ top: peekTarget, behavior: 'smooth' });
+}
+
+</script>
+</body>
+</html>
