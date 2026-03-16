@@ -1431,7 +1431,7 @@ const MODULE_CONTENT = {
       </div>
     </div>
 
-    <script>
+    <\u0073cript>
     // ── Questionnaire state ──────────────────────────────────
     const MQ = {
       answers: {},
@@ -2469,6 +2469,52 @@ function hideLoadingOverlay() {
 // ═══════════════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════
+//  PARTICLES
+// ═══════════════════════════════════════════════════════════════
+function initParticles() {
+  const canvas = g('pc');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function mkP() {
+    return {
+      x: Math.random() * W, y: Math.random() * H,
+      r: Math.random() * 1.4 + 0.25,
+      vx: (Math.random() - .5) * .14, vy: (Math.random() - .5) * .14,
+      a: Math.random() * .38 + .04,
+      tw: Math.random() * Math.PI * 2,
+      ts: Math.random() * .013 + .004,
+    };
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  for (let i = 0; i < 58; i++) particles.push(mkP());
+
+  (function loop() {
+    ctx.clearRect(0, 0, W, H);
+    for (const p of particles) {
+      p.x += p.vx; p.y += p.vy; p.tw += p.ts;
+      if (p.x < -4) p.x = W + 4; if (p.x > W + 4) p.x = -4;
+      if (p.y < -4) p.y = H + 4; if (p.y > H + 4) p.y = -4;
+      ctx.save();
+      ctx.globalAlpha = p.a * (.5 + .5 * Math.sin(p.tw));
+      ctx.fillStyle = '#c9a84c';
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    }
+    requestAnimationFrame(loop);
+  })();
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   initParticles();
 
